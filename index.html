@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="私享">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href='data:application/manifest+json,{"name":"私享","short_name":"私享","display":"standalone","background_color":"#000000","theme_color":"#000000"}'>
+<link id="ico" rel="apple-touch-icon">
+<title>私享</title>
+<style>
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:#fff;font:15px -apple-system,system-ui,"PingFang SC",sans-serif;overflow:hidden;overscroll-behavior:none}
+button{font:inherit;color:inherit;background:none;border:0}
+[hidden]{display:none!important}
+#feed{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+section{height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;background:#000;overflow:hidden}
+section>video,section>img{width:100%;height:100%;object-fit:contain;display:block}
+.dml{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.dml span{position:absolute;left:100%;white-space:nowrap;font-size:18px;font-weight:600;text-shadow:0 0 3px #000,0 0 3px #000;animation:fly 9s linear forwards;will-change:transform}
+.dml .me{outline:1px solid #fffa;border-radius:14px;padding:0 9px}
+@keyframes fly{to{transform:translateX(calc(-100vw - 100%))}}
+.bar{position:absolute;left:0;height:2px;background:#fff;width:0;bottom:calc(64px + env(safe-area-inset-bottom))}
+#top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 8px) 18px 18px;background:linear-gradient(#0009,transparent);pointer-events:none}
+#top *{pointer-events:auto}
+#top b{font-size:17px;letter-spacing:2px}
+#top button{font-size:22px;padding:4px 10px}
+#rail{position:fixed;right:6px;bottom:calc(90px + env(safe-area-inset-bottom));z-index:5;display:flex;flex-direction:column;gap:14px;align-items:center}
+#rail button{width:54px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;text-shadow:0 0 4px #000}
+#rail i{font-style:normal;font-size:28px;line-height:1}
+#rail .off i{opacity:.35}
+#bot{position:fixed;left:0;right:0;z-index:5;bottom:calc(var(--kb,0px) + env(safe-area-inset-bottom));padding:8px 14px 10px;background:linear-gradient(transparent,#000a)}
+form{display:flex;gap:8px}
+input[type=text],input[type=password]{flex:1;min-width:0;height:42px;border-radius:21px;border:0;padding:0 16px;font-size:16px;color:#fff;background:#ffffff26;outline:0}
+input::placeholder{color:#fff8}
+form button{padding:0 16px;border-radius:21px;background:#fff;color:#000;font-weight:600}
+#empty{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.8;color:#fffa;pointer-events:none;padding:30px}
+#lock{position:fixed;inset:0;z-index:50;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px}
+#lock h1{font-size:30px;letter-spacing:6px;font-weight:600;margin-bottom:10px}
+#lock form{flex-direction:column;width:min(300px,100%)}
+#lock button{height:42px}
+#msg{color:#ff8a8a;min-height:20px;font-size:13px}
+#sheet{position:fixed;inset:0;z-index:20;visibility:hidden;transition:visibility .3s}
+#sheet.on{visibility:visible}
+.bk{position:absolute;inset:0;background:#0007;opacity:0;transition:opacity .3s}
+#sheet.on .bk{opacity:1}
+.pn{position:absolute;left:0;right:0;bottom:var(--kb,0px);height:66dvh;background:#1c1c1e;border-radius:18px 18px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom)}
+#sheet.on .pn{transform:none}
+.hd{display:flex;justify-content:space-between;padding:14px 18px;font-weight:600}
+#cl{flex:1;overflow-y:auto;padding:0 18px;-webkit-overflow-scrolling:touch}
+#cl p{padding:10px 0;display:flex;gap:10px;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #ffffff14;word-break:break-all}
+#cl small{display:block;color:#fff7;margin-top:3px}
+#cl button{color:#fff6;padding:0 4px}
+.nil{color:#fff7;text-align:center;padding:40px 0}
+#cf{padding:10px 14px}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 60px);transform:translateX(-50%);background:#222;padding:8px 16px;border-radius:18px;z-index:60;font-size:14px}
+</style></head><body>
+<div id="feed"></div>
+<div id="empty" hidden>还没有作品<br>点右上角 ＋ 导入照片或视频</div>
+<div id="top"><b>私享</b><div><button id="add" aria-label="导入">＋</button><button id="lk" aria-label="锁定">🔒</button></div></div>
+<div id="rail">
+ <button id="bc"><i>💬</i><span id="cc">0</span></button>
+ <button id="bd"><i>弹</i><span>弹幕</span></button>
+ <button id="bx"><i>🗑</i><span>删除</span></button>
+</div>
+<div id="bot"><form id="dmf"><input id="dmi" type="text" maxlength="60" placeholder="发一条弹幕，立即保存" enterkeyhint="send" autocomplete="off"><button>发送</button></form></div>
+<div id="sheet"><div class="bk"></div><div class="pn">
+ <div class="hd"><span id="sct">评论</span><button id="sx">✕</button></div>
+ <div id="cl"></div>
+ <form id="cf"><input id="ci" type="text" maxlength="500" placeholder="写评论" autocomplete="off"><button>发布</button></form>
+</div></div>
+<div id="lock"><h1>私享</h1>
+ <form id="lf"><input id="pw" type="password" placeholder="密码" autocomplete="current-password"><input id="pw2" type="password" placeholder="再输入一次密码" hidden><button id="lb">解锁</button></form>
+ <div id="msg"></div></div>
+<input id="fi" type="file" accept="image/*,video/*" multiple hidden>
+<script>
+"use strict";
+const $=s=>document.querySelector(s),enc=new TextEncoder(),dec=new TextDecoder();
+let key=null,secs=[],cur=-1,picking=false,busy=false,dmOn=true,raf=0,tt;
+
+/* ---------- 图标 ---------- */
+(()=>{const c=document.createElement('canvas');c.width=c.height=180;const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,180,180);g.fillStyle='#fff';g.font='bold 100px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('私',90,98);$('#ico').href=c.toDataURL()})();
+
+/* ---------- 存储 ---------- */
+const DB=new Promise((ok,no)=>{const r=indexedDB.open('priv',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('kv');d.createObjectStore('posts',{keyPath:'id'});d.createObjectStore('blobs',{keyPath:'id'});d.createObjectStore('notes',{keyPath:'id'}).createIndex('p','pid')};r.onsuccess=()=>ok(r.result);r.onerror=no});
+const tx=async(st,mode,fn)=>{const d=await DB;return new Promise((ok,no)=>{const t=d.transaction(st,mode),r=fn(t.objectStore(st));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error)})};
+const kvGet=k=>tx('kv','readonly',s=>s.get(k)),kvPut=(k,v)=>tx('kv','readwrite',s=>s.put(v,k));
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
+
+/* ---------- 加密 ---------- */
+async function derive(pw,salt){const m=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:300000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function seal(buf){const iv=crypto.getRandomValues(new Uint8Array(12));return{iv,data:await crypto.subtle.encrypt({name:'AES-GCM',iv},key,buf)}}
+const open=(iv,data)=>crypto.subtle.decrypt({name:'AES-GCM',iv},key,data);
+const sealJ=o=>seal(enc.encode(JSON.stringify(o))),openJ=async(iv,d)=>JSON.parse(dec.decode(await open(iv,d)));
+
+/* ---------- 解锁 / 锁定 ---------- */
+const msg=t=>$('#msg').textContent=t;
+async function initLock(){const first=!(await kvGet('salt'));$('#pw2').hidden=!first;$('#lb').textContent=first?'设置密码并进入':'解锁';$('#pw').autocomplete=first?'new-password':'current-password'}
+$('#lf').onsubmit=async e=>{e.preventDefault();const pw=$('#pw').value;if(!pw)return;msg('');
+ try{const salt0=await kvGet('salt');
+  if(!salt0){if(pw.length<6)return msg('密码至少 6 位');if(pw!==$('#pw2').value)return msg('两次输入不一致');
+   const salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(pw,salt);await kvPut('salt',salt);await kvPut('chk',await seal(enc.encode('ok')))}
+  else{key=await derive(pw,salt0);const c=await kvGet('chk');await open(c.iv,c.data)}
+ }catch(err){key=null;return msg('密码错误')}
+ $('#pw').value=$('#pw2').value='';$('#lock').hidden=true;render()};
+function lock(){key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;closeSheet();$('#lock').hidden=false;$('#empty').hidden=true;initLock()}
+$('#lk').onclick=lock;
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(key&&!picking&&!busy)lock()}else setTimeout(()=>picking=false,1500)});
+addEventListener('pagehide',()=>{if(key&&!busy)lock()});
+
+/* ---------- 工具 ---------- */
+function toast(t,ms=1800){let e=$('#toast');if(!e){e=document.createElement('div');e.id='toast';document.body.append(e)}e.textContent=t;clearTimeout(tt);if(ms)tt=setTimeout(()=>e.remove(),ms)}
+const clock=s=>{const x=s.x;return x.v&&x.media?x.media.currentTime:((performance.now()-x.t0)/1000)%20};
+
+/* ---------- 导入 ---------- */
+$('#add').onclick=()=>{picking=true;$('#fi').click()};
+$('#fi').oncancel=()=>picking=false;
+$('#fi').onchange=async e=>{const fs=[...e.target.files];e.target.value='';picking=false;if(!fs.length||!key)return;busy=true;
+ try{let i=0;for(const f of fs){toast(`加密导入 ${++i}/${fs.length}`,0);const id=crypto.randomUUID(),t=f.type||'image/jpeg',b=await seal(await f.arrayBuffer()),m=await sealJ({t,n:f.name,c:Date.now()});
+  await tx('blobs','readwrite',s=>s.put({id,iv:b.iv,data:b.data}));await tx('posts','readwrite',s=>s.put({id,ord:Date.now()+i,iv:m.iv,data:m.data}))}
+  toast('导入完成')}catch(err){toast('导入失败：空间不足或文件过大',3000)}
+ busy=false;render()};
+
+/* ---------- 信息流 ---------- */
+const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting)activate(secs.indexOf(e.target))},{threshold:.6});
+async function render(){io.disconnect();const feed=$('#feed');feed.innerHTML='';secs=[];cur=-1;
+ const ps=await tx('posts','readonly',s=>s.getAll());ps.sort((a,b)=>b.ord-a.ord);$('#empty').hidden=ps.length>0;$('#cc').textContent=0;
+ for(const p of ps){const m=await openJ(p.iv,p.data),s=document.createElement('section');s.innerHTML='<div class="dml"></div><i class="bar"></i>';
+  s.x={pid:p.id,v:m.t.startsWith('video'),mime:m.t,dm:[],cm:[],g:0,t0:0,last:-1,lane:-1,p:null,media:null,url:null};feed.append(s);secs.push(s);io.observe(s)}
+ feed.scrollTop=0;cancelAnimationFrame(raf);tick()}
+function activate(i){if(i<0||i===cur)return;if(secs[cur])pause(secs[cur]);cur=i;
+ secs.forEach((s,j)=>Math.abs(j-i)<=1?load(s):unload(s));
+ const s=secs[i];load(s).then(()=>{if(cur===i)play(s)});upd()}
+function load(s){const x=s.x;if(x.p)return x.p;const g=x.g;
+ return x.p=(async()=>{const b=await tx('blobs','readonly',st=>st.get(x.pid));if(!b||!key||x.g!==g)return;
+  const buf=await open(b.iv,b.data);if(x.g!==g)return;
+  x.url=URL.createObjectURL(new Blob([buf],{type:x.mime}));
+  const el=document.createElement(x.v?'video':'img');if(x.v){el.setAttribute('playsinline','');el.loop=true;el.preload='auto';el.onclick=()=>el.paused?el.play():el.pause()}
+  el.src=x.url;s.prepend(el);x.media=el;await notes(s);if(s===secs[cur])upd()})()}
+function unload(s){const x=s.x;x.g++;x.p=null;if(x.media){if(x.v)x.media.pause();x.media.removeAttribute('src');x.media.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
+function play(s){const x=s.x;if(!x.media)return;x.t0=performance.now();x.last=-1;s.querySelector('.dml').innerHTML='';
+ if(x.v){x.media.currentTime=0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
+function pause(s){const x=s.x;if(x.v&&x.media)x.media.pause();s.querySelector('.dml').innerHTML=''}
+function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd').classList.toggle('off',!dmOn)}
+
+/* ---------- 评论 / 弹幕数据 ---------- */
+async function notes(s){const x=s.x,rs=await tx('notes','readonly',st=>st.index('p').getAll(x.pid));x.cm=[];x.dm=[];
+ for(const r of rs){const o=await openJ(r.iv,r.data);o.id=r.id;(r.k==='c'?x.cm:x.dm).push(o)}x.cm.sort((a,b)=>a.c-b.c);x.dm.sort((a,b)=>a.t-b.t)}
+async function saveNote(s,k,o){const id=crypto.randomUUID(),q=await sealJ(o);await tx('notes','readwrite',st=>st.put({id,pid:s.x.pid,k,iv:q.iv,data:q.data}));return id}
+
+/* ---------- 弹幕引擎 ---------- */
+function spawn(s,d,mine){if(!dmOn)return;const e=document.createElement('span');e.textContent=d.text;s.x.lane=(s.x.lane+1)%7;e.style.top=(14+s.x.lane*6)+'%';if(mine)e.className='me';e.onanimationend=()=>e.remove();s.querySelector('.dml').append(e)}
+function tick(){raf=requestAnimationFrame(tick);const s=secs[cur];if(!s||!s.x.media)return;const x=s.x,c=clock(s);
+ if(c<x.last)x.last=-1;
+ for(const d of x.dm)if(d.t>x.last&&d.t<=c)spawn(s,d);
+ x.last=c;const du=x.v&&x.media.duration;s.querySelector('.bar').style.width=du?(c/du*100)+'%':'0'}
+$('#dmf').onsubmit=async e=>{e.preventDefault();const s=secs[cur],t=$('#dmi').value.trim();if(!s||!t||!s.x.media)return;$('#dmi').value='';
+ const x=s.x,d={t:+clock(s).toFixed(2),text:t,c:Date.now()};x.last=Math.max(x.last,d.t);x.dm.push(d);spawn(s,d,1);
+ d.id=await saveNote(s,'d',d);x.dm.sort((a,b)=>a.t-b.t)};
+$('#bd').onclick=()=>{dmOn=!dmOn;if(!dmOn)secs.forEach(s=>s.querySelector('.dml').innerHTML='');upd()};
+
+/* ---------- 评论面板 ---------- */
+function closeSheet(){$('#sheet').classList.remove('on');$('#ci').blur()}
+function listC(){const s=secs[cur],l=$('#cl');l.innerHTML='';if(!s)return;
+ $('#sct').textContent=`${s.x.cm.length} 条评论`;
+ if(!s.x.cm.length)l.innerHTML='<div class="nil">还没有评论，写下第一条</div>';
+ for(const c of s.x.cm){const p=document.createElement('p'),d=document.createElement('div');d.textContent=c.text;const sm=document.createElement('small');sm.textContent=new Date(c.c).toLocaleString('zh-CN',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});d.append(sm);
+  const b=document.createElement('button');b.textContent='删除';b.onclick=async()=>{await tx('notes','readwrite',st=>st.delete(c.id));s.x.cm=s.x.cm.filter(z=>z!==c);listC();upd()};p.append(d,b);l.append(p)}}
+$('#bc').onclick=()=>{if(!secs[cur])return;listC();$('#sheet').classList.add('on')};
+$('#sx').onclick=$('.bk').onclick=closeSheet;
+$('#cf').onsubmit=async e=>{e.preventDefault();const s=secs[cur],t=$('#ci').value.trim();if(!s||!t)return;$('#ci').value='';
+ const c={text:t,c:Date.now()};s.x.cm.push(c);listC();upd();c.id=await saveNote(s,'c',c);const l=$('#cl');l.scrollTop=l.scrollHeight};
+
+/* ---------- 删除作品 ---------- */
+$('#bx').onclick=async()=>{const s=secs[cur];if(!s||!confirm('删除这个作品及其评论、弹幕？不可恢复。'))return;const id=s.x.pid,d=await DB;
+ await new Promise(ok=>{const t=d.transaction(['posts','blobs','notes'],'readwrite');t.objectStore('posts').delete(id);t.objectStore('blobs').delete(id);
+  t.objectStore('notes').index('p').openCursor(id).onsuccess=e=>{const c=e.target.result;if(c){c.delete();c.continue()}};t.oncomplete=ok});
+ secs.forEach(unload);render()};
+
+/* ---------- 键盘适配 ---------- */
+if(window.visualViewport){const f=()=>document.documentElement.style.setProperty('--kb',Math.max(0,innerHeight-visualViewport.height-visualViewport.offsetTop)+'px');visualViewport.onresize=visualViewport.onscroll=f}
+
+initLock();
+</script></body></html>
