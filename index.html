@@ -26,7 +26,7 @@ section>video,section>img{width:100%;height:100%;object-fit:contain;display:bloc
 @keyframes fly{to{transform:translateX(calc(-100vw - 100%))}}
 #top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(var(--sf) + 6px) 8px 22px;background:linear-gradient(#000a,transparent);pointer-events:none}
 #top>*{pointer-events:auto}
-#top button{font-size:21px;padding:6px 9px;text-shadow:0 0 6px #000}#top .tg{font-size:13px;padding:3px 10px;margin-right:4px;border:1px solid #ffffff66;border-radius:14px;color:#fffd;text-shadow:none;background:#0005}#top .tg.on{background:var(--g);border-color:var(--g);color:#1a1206;font-weight:600}
+#top button{font-size:21px;padding:6px 6px;text-shadow:0 0 6px #000}#top .tg{font-size:13px;padding:3px 8px;margin-right:2px;border:1px solid #ffffff66;border-radius:14px;color:#fffd;text-shadow:none;background:#0005}#top .tg.on{background:var(--g);border-color:var(--g);color:#1a1206;font-weight:600}
 #ttl{letter-spacing:3px;font-size:16px;padding-left:10px;color:var(--g)}
 #rail{position:fixed;right:6px;bottom:calc(var(--bt) + 58px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
 #rail button{width:54px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;text-shadow:0 0 5px #000}
@@ -88,6 +88,7 @@ input::placeholder{color:#fff7}
 #cl button{color:#fff7;padding:0 4px}
 #cf{display:flex;gap:8px;padding:10px 14px}
 #toast{position:fixed;left:50%;top:calc(var(--sf) + 56px);transform:translateX(-50%);background:#26242fee;padding:9px 18px;border-radius:20px;z-index:60;font-size:14px;white-space:nowrap}
+.imm #top,.imm #rail,.imm #bar,.imm #pg,.imm #snd,.imm #toast,.imm #sheet{display:none!important}.imm #feed{bottom:0}
 </style></head><body>
 <div id="feedv" hidden>
  <div id="feed"></div><div id="empty" hidden>还没有作品<br>去「我的」点“导入作品”开始</div>
@@ -106,7 +107,7 @@ input::placeholder{color:#fff7}
  <div id="sub" hidden><button id="sbk">‹ 返回</button><b id="sn"></b><button id="sdel">删除收藏夹</button></div>
  <div id="grid"></div>
 </div>
-<div id="top"><button id="bk" hidden>‹</button><span id="ttl" class="serif">日月草的后宫</span><div><button id="rnd" class="tg">随机</button><button id="aut" class="tg">连播</button><button id="add">＋</button><button id="cfg">⚙︎</button><button id="lk">🔒</button></div></div>
+<div id="top"><button id="bk" hidden>‹</button><span id="ttl" class="serif">日月草</span><div><button id="imm" class="tg">沉浸</button><button id="rnd" class="tg">随机</button><button id="aut" class="tg">连播</button><button id="add">＋</button><button id="cfg">⚙︎</button><button id="lk">🔒</button></div></div>
 <div id="bar">
  <button class="tab" id="tH">首页</button>
  <form id="dmf"><input id="dmi" type="text" maxlength="60" placeholder="发条弹幕，立即保存" enterkeyhint="send" autocomplete="off"><button class="gold">发送</button></form>
@@ -123,7 +124,7 @@ input::placeholder{color:#fff7}
 <script>
 "use strict";
 const $=s=>document.querySelector(s),enc=new TextEncoder(),dec=new TextDecoder();
-let rnd=false,aut=false,FB=[],key=null,secs=[],cur=-1,picking=false,busy=false,dmOn=true,raf=0,tt,view='',fromMe=false,tab='w',fold=null,sm=false,onSub=null,rf=()=>{},pgD=false,skip=false;
+let imm=false,sw=0,WL=null,rnd=false,aut=false,FB=[],key=null,secs=[],cur=-1,picking=false,busy=false,dmOn=true,raf=0,tt,view='',fromMe=false,tab='w',fold=null,sm=false,onSub=null,rf=()=>{},pgD=false,skip=false;
 const S=new Set(),P=[];let FD={f:[]};
 
 /* ---------- Logo ---------- */
@@ -166,7 +167,7 @@ async function fidOn(){try{const c=await navigator.credentials.create({publicKey
  await kvPut('fid',b64(c.rawId));await kvPut('fk',await crypto.subtle.exportKey('raw',key));toast('面容 ID 已开启')}catch(e){toast('开启失败：请用主屏幕图标打开，并在系统设置允许面容 ID',3000)}}
 $('#cfg').onclick=async()=>{const on=!!(await kvGet('fid'));sh('设置',l=>{const p=document.createElement('p');p.innerHTML=`<span>面容 ID 解锁</span><em>${on?'已开启 · 点此关闭':'点此开启'}</em>`;p.onclick=async()=>{if(on){await kvPut('fid',null);await kvPut('fk',null);toast('已关闭')}else await fidOn();closeSheet()};
  const t=document.createElement('p');t.className='tip';t.textContent='面容 ID 只是快捷入口，密码仍然有效。忘记密码且未开启面容 ID 时数据无法恢复。';l.append(p,t)})};
-function lock(){key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;S.clear();sm=false;closeSheet();$('#feedv').hidden=$('#me').hidden=true;view='';$('#lock').hidden=false;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);initLock()}
+function lock(){imm&&setImm(false);key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;S.clear();sm=false;closeSheet();$('#feedv').hidden=$('#me').hidden=true;view='';$('#lock').hidden=false;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);initLock()}
 $('#lk').onclick=lock;
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(key&&!picking&&!busy)lock()}else setTimeout(()=>picking=false,1500)});
 addEventListener('pagehide',()=>{if(key&&!busy)lock()});
@@ -212,7 +213,7 @@ async function imp(fs){fs=fs.filter(isM);if(!fs.length||!key)return toast('没�
  toast(bad?`已导入 ${n} 个，${bad} 个失败（可能空间不足）`:`已导入 ${n} 个`,3000);busy=false;view==='me'?drawMe():showFeed(P,null,false)}
 
 /* ---------- 视图 ---------- */
-function go(v){view=v;$('#feedv').hidden=v!=='feed';$('#me').hidden=v!=='me';$('#dmf').hidden=v!=='feed';$('#imp').hidden=v!=='me'||sm;$('#rnd').hidden=$('#aut').hidden=v!=='feed';
+function go(v){view=v;$('#feedv').hidden=v!=='feed';$('#me').hidden=v!=='me';$('#dmf').hidden=v!=='feed';$('#imp').hidden=v!=='me'||sm;$('#rnd').hidden=$('#aut').hidden=$('#imm').hidden=v!=='feed';if(imm&&v!=='feed')setImm(false);
  $('#bk').hidden=!(v==='feed'&&fromMe);$('#ttl').hidden=v==='feed'&&fromMe;$('#tH').classList.toggle('on',v==='feed'&&!fromMe);$('#tM').classList.toggle('on',v==='me'||fromMe);$('#sel').hidden=!(sm&&v==='me');
  if(v!=='feed'){secs.forEach(unload);cur=-1}if(v==='me')drawMe()}
 $('#tH').onclick=()=>{if(view==='feed'&&!fromMe&&secs.length)return;sm=false;showFeed(P,null,false)};
@@ -311,6 +312,12 @@ $('#aut').onclick=()=>{aut=!aut;tgSync();const s=secs[cur];if(s&&s.x.v&&s.x.medi
 function next(){const f=$('#feed'),s=secs[cur];if(!s)return;if(secs.length<2){play(s);return}const i=cur+1<secs.length?cur+1:0;f.scrollTo({top:i*f.clientHeight,behavior:i?'smooth':'auto'})}
 function onEnd(s){if(s!==secs[cur]||!aut)return;const m=s.x.media;if(!s.x.dirty)next();else if(m){m.currentTime=0;m.play().catch(()=>{})}}
 document.addEventListener('touchstart',()=>{const s=secs[cur];if(s&&view==='feed')s.x.dirty=true},{passive:true,capture:true});
+/* ---------- 沉浸播放 ---------- */
+function setImm(on){imm=on;document.body.classList.toggle('imm',on);const f=$('#feed');f.scrollTop=Math.max(0,cur)*f.clientHeight;
+ try{if(on){navigator.wakeLock&&navigator.wakeLock.request('screen').then(l=>WL=l).catch(()=>{})}else if(WL){WL.release();WL=null}}catch(e){}}
+$('#imm').onclick=()=>{closeSheet();setImm(true)};
+document.addEventListener('touchstart',()=>{if(imm){setImm(false);sw=Date.now()}},{capture:true,passive:true});
+document.addEventListener('click',e=>{if(Date.now()-sw<500){e.stopPropagation();e.preventDefault()}},true);
 $('#snd').onclick=()=>{const s=secs[cur];if(s&&s.x.media){s.x.media.muted=false;s.x.media.play().catch(()=>{})}};
 var GB=0;function gap(){const st=matchMedia('(display-mode: standalone)').matches||navigator.standalone,g=Math.round(screen.height-innerHeight);GB=(st&&g>8&&g<=100)?g:0;document.documentElement.style.setProperty('--gb',GB+'px')}
 gap();addEventListener('resize',gap);addEventListener('orientationchange',()=>setTimeout(gap,300));
