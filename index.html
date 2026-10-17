@@ -17,7 +17,7 @@ html,body{height:100%;background:#07070b;color:#fff;font:15px -apple-system,syst
 button{font:inherit;color:inherit;background:none;border:0}
 [hidden]{display:none!important}
 .serif{font-family:Didot,"Bodoni 72",Georgia,"Songti SC",serif}
-#feed{position:fixed;inset:0 0 var(--bar) 0;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#feed{position:fixed;inset:0 0 calc(var(--bar) + 30px) 0;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 section{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;background:#000;overflow:hidden}
 section>video,section>img{width:100%;height:100%;object-fit:contain;display:block}
 .dml{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -28,16 +28,16 @@ section>video,section>img{width:100%;height:100%;object-fit:contain;display:bloc
 #top>*{pointer-events:auto}
 #top button{font-size:21px;padding:6px 10px;text-shadow:0 0 6px #000}
 #ttl{letter-spacing:3px;font-size:16px;padding-left:10px;color:var(--g)}
-#rail{position:fixed;right:6px;bottom:calc(var(--bar) + 54px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
+#rail{position:fixed;right:6px;bottom:calc(var(--bar) + 84px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
 #rail button{width:54px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;text-shadow:0 0 5px #000}
 #rail i{font-style:normal;font-size:29px;line-height:1}
 #rail .off i{opacity:.35}#rail .on i{color:var(--g)}
-#pg{position:fixed;left:0;right:0;bottom:var(--bar);height:36px;z-index:5;touch-action:none}
-.tr{position:absolute;left:14px;right:14px;bottom:8px;height:2px;background:#ffffff40;border-radius:3px;transition:height .15s}
+#pg{position:fixed;left:0;right:0;bottom:var(--bar);height:30px;z-index:5;touch-action:none}
+.tr{position:absolute;left:14px;right:14px;bottom:13px;height:2px;background:#ffffff40;border-radius:3px;transition:height .15s}
 .tr i{display:block;height:100%;width:var(--p,0);background:#fff;border-radius:3px}
 .tr b{position:absolute;top:50%;left:var(--p,0);width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;box-shadow:0 0 6px #000;transition:transform .15s}
 #pg.on .tr{height:6px}#pg.on b{transform:scale(1.5)}
-#tm{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:22px;opacity:0;text-shadow:0 0 6px #000}#pg.on #tm{opacity:1}
+#tm{position:absolute;bottom:44px;left:0;right:0;text-align:center;font-size:22px;opacity:0;text-shadow:0 0 6px #000}#pg.on #tm{opacity:1}
 #bar{position:fixed;left:0;right:0;bottom:var(--kb,0px);height:var(--bar);padding:0 8px env(safe-area-inset-bottom);background:#07070b;display:flex;align-items:center;gap:6px;z-index:6;border-top:1px solid #ffffff12}
 .tab{width:56px;height:44px;font-size:13px;color:#fff8;position:relative;flex:none}
 .tab.on{color:#fff;font-weight:600}.tab.on::after{content:"";position:absolute;left:50%;bottom:3px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--g)}
@@ -65,9 +65,9 @@ input::placeholder{color:#fff7}
 .gr u{display:none;position:absolute;inset:0;background:#0006}
 .sm .gr u{display:block}.sm .gr u::after{content:"";position:absolute;right:6px;bottom:6px;width:22px;height:22px;border-radius:50%;border:1.5px solid #fff}
 .gr .on u{background:#d9b77944}.gr .on u::after{background:var(--g) ;border-color:var(--g);content:"✓";color:#1a1206;text-align:center;line-height:20px;font-weight:700}
-.fl{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
-.fc .cv{aspect-ratio:1;border-radius:16px;background:#15141d center/cover;border:1px solid #ffffff18;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--g)}
-.fc b{display:block;margin-top:8px;font-weight:500}.fc small{color:#fff7}
+.fl{display:block}
+.fc{display:flex;align-items:center;gap:14px;padding:9px 16px;border-bottom:1px solid #ffffff10}.fc::after{content:'›';color:#fff5;font-size:24px}.fc .t{flex:1;min-width:0}.fc .cv{width:54px;height:54px;flex:none;border-radius:12px;background:#15141d center/cover;border:1px solid #ffffff18;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--g)}
+.fc b{display:block;font-weight:500;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fc small{color:#fff7;display:block;margin-top:3px}#snd{position:fixed;left:50%;top:calc(var(--sf) + 58px);transform:translateX(-50%);z-index:6;background:#000b;border:1px solid var(--g);color:var(--g);padding:8px 16px;border-radius:20px;font-size:14px}
 .nil{color:#fff7;text-align:center;padding:60px 20px;line-height:1.9}
 #lock{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 50% 26%,#1d1733,#07070b 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:48px 40px calc(10vh + env(safe-area-inset-bottom))}
 #lock img{width:min(300px,74vw);margin-bottom:44px}
@@ -97,7 +97,7 @@ input::placeholder{color:#fff7}
   <button id="bd"><i class="serif">弹</i><span>弹幕</span></button>
   <button id="bx"><i>🗑</i><span>删除</span></button>
  </div>
- <div id="pg" hidden><span id="tm"></span><div class="tr"><i></i><b></b></div></div>
+ <button id="snd" hidden>🔇 点按开启声音</button><div id="pg" hidden><span id="tm"></span><div class="tr"><i></i><b></b></div></div>
 </div>
 <div id="me" hidden>
  <div class="hdr"><div class="av" id="av"></div><h2 class="serif">日月草的后宫</h2><p class="serif">SUN MOON GRASS</p>
@@ -183,7 +183,7 @@ $('#cf').onsubmit=async e=>{e.preventDefault();const t=$('#ci').value.trim();if(
 
 /* ---------- 载入 ---------- */
 async function loadAll(){P.length=0;const ps=await tx('posts','readonly',s=>s.getAll());ps.sort((a,b)=>b.ord-a.ord);
- for(const p of ps){const m=await openJ(p.iv,p.data);P.push({id:p.id,v:m.t.startsWith('video'),mime:m.t,th:p.td?URL.createObjectURL(new Blob([await open(p.ti,p.td)],{type:'image/jpeg'})):null})}
+ for(const p of ps){const m=await openJ(p.iv,p.data);P.push({id:p.id,v:m.t.startsWith('video'),mime:m.t,nc:m.nc,_o:p.ord,th:p.td?URL.createObjectURL(new Blob([await open(p.ti,p.td)],{type:'image/jpeg'})):null})}
  const f=await kvGet('fav');FD=f?await openJ(f.iv,f.data):{f:[{id:'d',n:'我的收藏',ids:[]}]}}
 
 /* ---------- 导入 ---------- */
@@ -194,16 +194,22 @@ for(const i of ['fi','fd','ff']){const e=$('#'+i);e.oncancel=()=>picking=false;e
 const isM=f=>/^(image|video)\//.test(f.type)||/\.(jpe?g|png|gif|webp|heic|heif|mp4|mov|m4v|webm)$/i.test(f.name);
 const mimeOf=f=>f.type||(/\.mov$/i.test(f.name)?'video/quicktime':/\.(mp4|m4v)$/i.test(f.name)?'video/mp4':'image/jpeg');
 async function thumb(f,v){const u=URL.createObjectURL(f);let el;try{let w,h;
- if(v){el=document.createElement('video');el.muted=true;el.preload='auto';el.setAttribute('playsinline','');el.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none';document.body.append(el);el.src=u;await new Promise((ok,no)=>{el.onloadedmetadata=ok;el.onerror=no;setTimeout(no,8000)});try{await el.play();el.pause()}catch(e){}el.currentTime=Math.min(.5,(el.duration||1)/2);await new Promise(ok=>{el.onseeked=ok;setTimeout(ok,2500)});await new Promise(r=>setTimeout(r,200));w=el.videoWidth;h=el.videoHeight}
+ if(v){el=document.createElement('video');el.muted=true;el.preload='auto';el.setAttribute('playsinline','');el.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none';document.body.append(el);el.src=u;await new Promise((ok,no)=>{el.onloadedmetadata=ok;el.onerror=no;setTimeout(no,8000)});try{await el.play();el.pause()}catch(e){}el.currentTime=Math.min(.5,(el.duration||1)/2);await new Promise(ok=>{el.onseeked=ok;setTimeout(ok,1500)});await new Promise(r=>setTimeout(r,120));w=el.videoWidth;h=el.videoHeight}
  else{el=new Image();el.src=u;await el.decode();w=el.naturalWidth;h=el.naturalHeight}
  if(!w)return null;const W=360,H=480,c=document.createElement('canvas');c.width=W;c.height=H;const k=Math.max(W/w,H/h);c.getContext('2d').drawImage(el,(W-w*k)/2,(H-h*k)/2,w*k,h*k);
  return await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72))}catch(e){return null}finally{URL.revokeObjectURL(u);if(el&&el.remove)el.remove()}}
-async function imp(fs){fs=fs.filter(isM);if(!fs.length||!key)return toast('没有可导入的照片或视频');busy=true;let n=0;
- try{const base=Date.now()*1000;for(const f of fs){toast(`加密导入 ${n+1}/${fs.length}`,0);const id=crypto.randomUUID(),t=mimeOf(f),v=t.startsWith('video'),tb=await thumb(f,v),b=await seal(await f.arrayBuffer()),m=await sealJ({t,n:f.name}),th=tb&&await seal(tb);
-  await tx('blobs','readwrite',s=>s.put({id,iv:b.iv,data:b.data}));await tx('posts','readwrite',s=>s.put({id,ord:base+fs.length-n,iv:m.iv,data:m.data,ti:th&&th.iv,td:th&&th.data}));
-  P.unshift({id,v,mime:t,th:tb?URL.createObjectURL(new Blob([tb],{type:'image/jpeg'})):null,_o:base+fs.length-n});n++}
-  P.sort((a,b)=>(b._o||0)-(a._o||0)||0);toast(`已导入 ${n} 个`)}catch(e){toast(`导入中断（已导入 ${n} 个），可能空间不足`,3500)}
- busy=false;view==='me'?drawMe():showFeed(P,null,false)}
+async function imp(fs){fs=fs.filter(isM);if(!fs.length||!key)return toast('没有可导入的照片或视频');busy=true;let n=0,bad=0,wl=null;
+ try{wl=navigator.wakeLock&&await navigator.wakeLock.request('screen')}catch(e){}
+ const base=Date.now()*1000,CH=6*1048576;
+ for(let i=0;i<fs.length;i++){const f=fs[i];toast(`加密导入 ${i+1}/${fs.length}（请保持亮屏并留在本页）`,0);
+  try{const id=crypto.randomUUID(),t=mimeOf(f),v=t.startsWith('video'),nc=Math.max(1,Math.ceil(f.size/CH)),tb=await thumb(f,v);
+   for(let k=0;k<nc;k++){const b=await seal(await f.slice(k*CH,(k+1)*CH).arrayBuffer());await tx('blobs','readwrite',s=>s.put({id:id+'#'+k,iv:b.iv,data:b.data}))}
+   const m=await sealJ({t,n:f.name,nc}),th=tb&&await seal(tb),o=base+fs.length-i;
+   await tx('posts','readwrite',s=>s.put({id,ord:o,iv:m.iv,data:m.data,ti:th&&th.iv,td:th&&th.data}));
+   P.push({id,v,mime:t,nc,_o:o,th:tb?URL.createObjectURL(new Blob([tb],{type:'image/jpeg'})):null});n++}catch(e){bad++}
+  if(i%4===3)await new Promise(r=>setTimeout(r,30))}
+ P.sort((a,b)=>(b._o||0)-(a._o||0));try{wl&&wl.release()}catch(e){}
+ toast(bad?`已导入 ${n} 个，${bad} 个失败（可能空间不足）`:`已导入 ${n} 个`,3000);busy=false;view==='me'?drawMe():showFeed(P,null,false)}
 
 /* ---------- 视图 ---------- */
 function go(v){view=v;$('#feedv').hidden=v!=='feed';$('#me').hidden=v!=='me';$('#dmf').hidden=v!=='feed';$('#imp').hidden=v!=='me'||sm;$('#add').hidden=v==='me'&&false;
@@ -217,8 +223,8 @@ function curList(){if(tab==='w')return P;const f=FD.f.find(x=>x.id===fold);retur
 function drawMe(){$('#n1').textContent=P.length;$('#n2').textContent=FD.f.length;$('#t1').classList.toggle('on',tab==='w');$('#t2').classList.toggle('on',tab!=='w');
  const g=$('#grid'),inF=tab==='f'&&fold;$('#sub').hidden=!inF;$('#bsel').hidden=tab==='f'&&!fold;$('#bsel').textContent=sm?'完成':'选择';$('#me').classList.toggle('sm',sm);$('#sel').hidden=!sm;$('#imp').hidden=sm;g.innerHTML='';selUI();
  if(tab==='w'||inF){if(inF)$('#sn').textContent=FD.f.find(x=>x.id===fold).n;grid(g,curList())}
- else{g.className='fl';for(const f of FD.f){const c=document.createElement('div');c.className='fc';const fp=P.find(p=>p.id===f.ids[0]);c.innerHTML='<div class="cv"></div><b></b><small>'+f.ids.length+' 个作品</small>';if(fp&&fp.th)c.firstChild.style.backgroundImage=`url(${fp.th})`;else c.firstChild.textContent='☆';c.querySelector('b').textContent=f.n;c.onclick=()=>{fold=f.id;S.clear();drawMe()};g.append(c)}
-  const c=document.createElement('div');c.className='fc';c.innerHTML='<div class="cv">＋</div><b>新建收藏夹</b>';c.onclick=()=>sh('新建收藏夹',()=>{},'收藏夹名称',async t=>{FD.f.push({id:crypto.randomUUID(),n:t,ids:[]});await saveFD();closeSheet();drawMe()});g.append(c)}}
+ else{g.className='fl';for(const f of FD.f){const c=document.createElement('div');c.className='fc';const fp=P.find(p=>p.id===f.ids[0]);c.innerHTML='<div class="cv"></div><div class="t"><b></b><small>'+f.ids.length+' 个作品</small></div>';if(fp&&fp.th)c.firstChild.style.backgroundImage=`url(${fp.th})`;else c.firstChild.textContent='☆';c.querySelector('b').textContent=f.n;c.onclick=()=>{fold=f.id;S.clear();drawMe()};g.append(c)}
+  const c=document.createElement('div');c.className='fc';c.innerHTML='<div class="cv">＋</div><div class="t"><b>新建收藏夹</b></div>';c.onclick=()=>sh('新建收藏夹',()=>{},'收藏夹名称',async t=>{FD.f.push({id:crypto.randomUUID(),n:t,ids:[]});await saveFD();closeSheet();drawMe()});g.prepend(c)}}
 function grid(g,list){g.className='gr';if(!list.length){g.className='';g.innerHTML='<div class="nil">这里还没有作品</div>';return}
  for(const p of list){const c=document.createElement('div');c.dataset.id=p.id;if(p.th)c.style.backgroundImage=`url(${p.th})`;c.innerHTML=(p.v?'<i>▶</i>':'')+'<u></u>';if(S.has(p.id))c.classList.add('on');
   c.onclick=()=>{if(skip)return;sm?tog(c):showFeed(list,p.id,true)};g.append(c)}}
@@ -229,35 +235,44 @@ $('#sbk').onclick=()=>{fold=null;sm=false;S.clear();drawMe()};
 $('#sdel').onclick=async()=>{const f=FD.f.find(x=>x.id===fold);if(f&&confirm(`删除收藏夹“${f.n}”？里面的作品不会被删除。`)){FD.f=FD.f.filter(x=>x!==f);fold=null;await saveFD();drawMe()}};
 $('#bsel').onclick=()=>{sm=!sm;S.clear();drawMe()};$('#scan').onclick=$('#bsel').onclick;
 $('#sall').onclick=()=>{const l=curList();if(S.size===l.length)S.clear();else l.forEach(p=>S.add(p.id));drawMe()};
-/* 长按后滑动连续多选 */
-{const g=$('#grid');let lp,m0=true;
- g.addEventListener('touchstart',e=>{if(!sm)return;const c=e.target.closest('[data-id]');if(!c)return;clearTimeout(lp);lp=setTimeout(()=>{drag=true;m0=!S.has(c.dataset.id);tog(c,m0);skip=true;navigator.vibrate&&navigator.vibrate(8)},260)},{passive:true});
- g.addEventListener('touchmove',e=>{if(drag){e.preventDefault();const t=e.touches[0],el=document.elementFromPoint(t.clientX,t.clientY),c=el&&el.closest&&el.closest('[data-id]');if(c)tog(c,m0)}else clearTimeout(lp)},{passive:false});
- const end=()=>{clearTimeout(lp);drag=false;setTimeout(()=>skip=false,350)};g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
+/* 滑动连续多选：横向划动，或长按后拖动；靠近屏幕上下缘自动滚动 */
+{const g=$('#grid'),me=$('#me');let lp,m0=true,sx=0,sy=0,sc=null,lx=0,ly=0,al=0;
+ const under=()=>{const el=document.elementFromPoint(lx,ly),c=el&&el.closest&&el.closest('[data-id]');if(c)tog(c,m0)};
+ const loop=()=>{if(!drag)return;if(ly<150)me.scrollTop-=16;else if(ly>innerHeight-190)me.scrollTop+=16;under();al=requestAnimationFrame(loop)};
+ const begin=()=>{if(drag)return;drag=true;skip=true;clearTimeout(lp);if(sc){m0=!S.has(sc.dataset.id);tog(sc,m0)}navigator.vibrate&&navigator.vibrate(8);cancelAnimationFrame(al);loop()};
+ g.addEventListener('touchstart',e=>{if(!sm)return;const t=e.touches[0];sx=lx=t.clientX;sy=ly=t.clientY;sc=e.target.closest('[data-id]');clearTimeout(lp);lp=setTimeout(begin,260)},{passive:true});
+ g.addEventListener('touchmove',e=>{if(!sm)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;if(!drag){const dx=Math.abs(lx-sx),dy=Math.abs(ly-sy);if(dx>10&&dx>dy)begin();else if(dy>10)clearTimeout(lp)}if(drag&&e.cancelable)e.preventDefault()},{passive:false});
+ const end=()=>{clearTimeout(lp);drag=false;cancelAnimationFrame(al);setTimeout(()=>skip=false,350)};g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
 var drag=false;
 function favSheet(ids,done){sh('收藏到…',l=>{const t=document.createElement('p');t.className='tip';t.textContent='选择要放进的收藏夹，也可以在下方新建一个。';l.append(t);
  for(const f of FD.f){const p=document.createElement('p'),all=ids.every(i=>f.ids.includes(i));p.innerHTML='<span></span><em>'+(all?'✓ 已收藏':'')+'</em>';p.firstChild.textContent=f.n+'  ('+f.ids.length+')';
   p.onclick=async()=>{f.ids=all?f.ids.filter(i=>!ids.includes(i)):[...new Set([...f.ids,...ids])];await saveFD();redo();done&&done(!all)};l.append(p)}},'新建收藏夹并收藏',async t=>{FD.f.push({id:crypto.randomUUID(),n:t,ids:[...ids]});await saveFD();redo();done&&done(true)})}
 $('#sfav').onclick=()=>{if(!S.size)return toast('先选择作品');favSheet([...S],()=>{})};
 $('#sdl').onclick=async()=>{if(!S.size)return toast('先选择作品');if(!confirm(`删除所选 ${S.size} 个作品及其评论、弹幕？不可恢复。`))return;await delPosts([...S]);S.clear();sm=false;drawMe();toast('已删除')};
-async function delPosts(ids){const d=await DB;await new Promise(ok=>{const t=d.transaction(['posts','blobs','notes'],'readwrite');for(const id of ids){t.objectStore('posts').delete(id);t.objectStore('blobs').delete(id);t.objectStore('notes').index('p').openCursor(id).onsuccess=e=>{const c=e.target.result;if(c){c.delete();c.continue()}}}t.oncomplete=ok});
+async function delPosts(ids){const d=await DB;await new Promise(ok=>{const t=d.transaction(['posts','blobs','notes'],'readwrite');for(const id of ids){t.objectStore('posts').delete(id);t.objectStore('blobs').delete(id);{const pp=P.find(q=>q.id===id);for(let k=0;k<(pp&&pp.nc||0);k++)t.objectStore('blobs').delete(id+'#'+k)}t.objectStore('notes').index('p').openCursor(id).onsuccess=e=>{const c=e.target.result;if(c){c.delete();c.continue()}}}t.oncomplete=ok});
  for(const id of ids){const i=P.findIndex(p=>p.id===id);if(i>=0){P[i].th&&URL.revokeObjectURL(P[i].th);P.splice(i,1)}}FD.f.forEach(f=>f.ids=f.ids.filter(x=>!ids.includes(x)));await saveFD()}
 
 /* ---------- 信息流 ---------- */
+const SIL='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=',VP=[];let unl=false;
+const mkV=()=>{const v=document.createElement('video');v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');v.preload='auto';return v};
+for(let i=0;i<3;i++)VP.push(mkV());
+function unlockAudio(){if(unl)return;VP.forEach(v=>{v.src=SIL;v.muted=false;v.play().then(()=>unl=true,()=>{})})}
+['touchend','click'].forEach(ev=>document.addEventListener(ev,unlockAudio,{passive:true}));
+async function readBlob(x){const parts=[];if(!x.nc){const b=await tx('blobs','readonly',st=>st.get(x.pid));if(!b)return null;parts.push(await open(b.iv,b.data))}
+ else for(let k=0;k<x.nc;k++){const b=await tx('blobs','readonly',st=>st.get(x.pid+'#'+k));if(!b)return null;parts.push(await open(b.iv,b.data))}return new Blob(parts,{type:x.mime})}
 const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting)activate(secs.indexOf(e.target))},{threshold:.6});
 function showFeed(list,startId,mine){fromMe=!!mine;go('feed');io.disconnect();secs.forEach(unload);const feed=$('#feed');feed.innerHTML='';secs=[];cur=-1;$('#empty').hidden=list.length>0;
- for(const p of list){const s=document.createElement('section');s.innerHTML='<div class="dml"></div>';s.x={pid:p.id,v:p.v,mime:p.mime,dm:[],cm:[],g:0,t0:0,last:-1,lane:-1,p:null,media:null,url:null};feed.append(s);secs.push(s)}
+ for(const p of list){const s=document.createElement('section');s.innerHTML='<div class="dml"></div>';s.x={pid:p.id,v:p.v,mime:p.mime,nc:p.nc,dm:[],cm:[],g:0,t0:0,last:-1,lane:-1,p:null,media:null,url:null};feed.append(s);secs.push(s)}
  feed.scrollTop=Math.max(0,list.findIndex(p=>p.id===startId))*feed.clientHeight;secs.forEach(s=>io.observe(s));upd()}
 function activate(i){if(i<0||i===cur)return;if(secs[cur])pause(secs[cur]);cur=i;secs.forEach((s,j)=>Math.abs(j-i)<=1?load(s):unload(s));const s=secs[i];load(s).then(()=>{if(cur===i)play(s)});upd()}
 function load(s){const x=s.x;if(x.p)return x.p;const g=x.g;
- return x.p=(async()=>{const b=await tx('blobs','readonly',st=>st.get(x.pid));if(!b||!key||x.g!==g)return;const buf=await open(b.iv,b.data);if(x.g!==g)return;
-  x.url=URL.createObjectURL(new Blob([buf],{type:x.mime}));const el=document.createElement(x.v?'video':'img');if(x.v){el.setAttribute('playsinline','');el.loop=true;el.preload='auto';el.onclick=()=>el.paused?el.play():el.pause()}
+ return x.p=(async()=>{const bl=await readBlob(x);if(!bl||!key||x.g!==g)return;x.url=URL.createObjectURL(bl);const el=x.v?(VP.pop()||mkV()):document.createElement('img');if(x.v){el.loop=true;el.muted=false;el.onclick=()=>el.paused?el.play():el.pause()}
   el.addEventListener(x.v?'loadeddata':'load',()=>lazyTh(s),{once:true});el.src=x.url;s.prepend(el);x.media=el;await notes(s);if(s===secs[cur])upd()})()}
 async function lazyTh(s){const x=s.x,p=P.find(q=>q.id===x.pid),el=x.media;if(!p||p.th||!el||!key)return;const w=el.videoWidth||el.naturalWidth,h=el.videoHeight||el.naturalHeight;if(!w)return;
  try{const W=360,H=480,c=document.createElement('canvas');c.width=W;c.height=H;const k=Math.max(W/w,H/h);c.getContext('2d').drawImage(el,(W-w*k)/2,(H-h*k)/2,w*k,h*k);
  const ab=await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72)),t=await seal(ab),r=await tx('posts','readonly',st=>st.get(x.pid));if(!r)return;r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}))}catch(e){}}
-function unload(s){const x=s.x;x.g++;x.p=null;if(x.media){if(x.v)x.media.pause();x.media.removeAttribute('src');x.media.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
-function play(s){const x=s.x;if(!x.media)return;x.t0=performance.now();x.last=-1;s.querySelector('.dml').innerHTML='';if(x.v){x.media.currentTime=0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
+function unload(s){const x=s.x;x.g++;x.p=null;if(x.media){const m=x.media;if(x.v)m.pause();m.removeAttribute('src');if(x.v){m.load();m.onclick=null;VP.push(m)}m.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
+function play(s){const x=s.x;if(!x.media)return;x.t0=performance.now();x.last=-1;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
 function pause(s){const x=s.x;if(x.v&&x.media)x.media.pause();s.querySelector('.dml').innerHTML=''}
 const isFav=id=>FD.f.some(f=>f.ids.includes(id));
 function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd').classList.toggle('off',!dmOn);const f=s&&isFav(s.x.pid);$('#fv').classList.toggle('on',!!f);$('#fv i').textContent=f?'★':'☆'}
@@ -266,7 +281,7 @@ function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd')
 async function notes(s){const x=s.x,rs=await tx('notes','readonly',st=>st.index('p').getAll(x.pid));x.cm=[];x.dm=[];for(const r of rs){const o=await openJ(r.iv,r.data);o.id=r.id;(r.k==='c'?x.cm:x.dm).push(o)}x.cm.sort((a,b)=>a.c-b.c);x.dm.sort((a,b)=>a.t-b.t)}
 async function saveNote(s,k,o){const id=crypto.randomUUID(),q=await sealJ(o);await tx('notes','readwrite',st=>st.put({id,pid:s.x.pid,k,iv:q.iv,data:q.data}));return id}
 function spawn(s,d,mine){if(!dmOn)return;const e=document.createElement('span');e.textContent=d.text;s.x.lane=(s.x.lane+1)%7;e.style.top=(14+s.x.lane*6)+'%';if(mine)e.className='me';e.onanimationend=()=>e.remove();s.querySelector('.dml').append(e)}
-function tick(){raf=requestAnimationFrame(tick);const s=secs[cur];$('#pg').hidden=!(s&&s.x.v&&s.x.media);if(!s||!s.x.media)return;const x=s.x,c=clock(s);if(c<x.last)x.last=-1;if(!pgD)for(const d of x.dm)if(d.t>x.last&&d.t<=c)spawn(s,d);x.last=c;const du=x.v&&x.media.duration;$('#pg').style.setProperty('--p',du?(c/du*100)+'%':'0%')}
+function tick(){raf=requestAnimationFrame(tick);const s=secs[cur];$('#pg').hidden=!(s&&s.x.v&&s.x.media);$('#snd').hidden=!(s&&s.x.v&&s.x.media&&s.x.media.muted);if(!s||!s.x.media)return;const x=s.x,c=clock(s);if(c<x.last)x.last=-1;if(!pgD)for(const d of x.dm)if(d.t>x.last&&d.t<=c)spawn(s,d);x.last=c;const du=x.v&&x.media.duration;$('#pg').style.setProperty('--p',du?(c/du*100)+'%':'0%')}
 $('#dmf').onsubmit=async e=>{e.preventDefault();const s=secs[cur],t=$('#dmi').value.trim();if(!s||!t||!s.x.media)return;$('#dmi').value='';const x=s.x,d={t:+clock(s).toFixed(2),text:t,c:Date.now()};x.last=Math.max(x.last,d.t);x.dm.push(d);spawn(s,d,1);d.id=await saveNote(s,'d',d);x.dm.sort((a,b)=>a.t-b.t)};
 $('#bd').onclick=()=>{dmOn=!dmOn;if(!dmOn)secs.forEach(s=>s.querySelector('.dml').innerHTML='');upd()};
 $('#bc').onclick=()=>{const s=secs[cur];if(!s)return;sh('',l=>{const x=s.x;$('#sct').textContent=x.cm.length+' 条评论';if(!x.cm.length)l.innerHTML='<div class="nil">还没有评论，写下第一条</div>';
@@ -282,6 +297,7 @@ $('#bx').onclick=async()=>{const s=secs[cur];if(!s||!confirm('删除这个作品
  pg.addEventListener('touchmove',e=>{if(pgD){e.preventDefault();seek(e)}},{passive:false});
  const end=()=>{if(!pgD)return;pgD=false;pg.classList.remove('on');const s=secs[cur];s&&s.x.media&&s.x.media.play().catch(()=>{})};pg.addEventListener('touchend',end);pg.addEventListener('touchcancel',end)}
 
-if(window.visualViewport){const f=()=>document.documentElement.style.setProperty('--kb',Math.max(0,innerHeight-visualViewport.height-visualViewport.offsetTop)+'px');visualViewport.onresize=visualViewport.onscroll=f}
+if(window.visualViewport){const f=()=>{const d=innerHeight-visualViewport.height-visualViewport.offsetTop,a=document.activeElement;document.documentElement.style.setProperty('--kb',(a&&a.tagName==='INPUT'&&d>120?d:0)+'px')};visualViewport.onresize=visualViewport.onscroll=f;document.addEventListener('focusout',()=>setTimeout(f,50))}
+$('#snd').onclick=()=>{const s=secs[cur];if(s&&s.x.media){s.x.media.muted=false;s.x.media.play().catch(()=>{})}};
 raf=requestAnimationFrame(tick);initLock();
 </script></body></html>
