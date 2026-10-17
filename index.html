@@ -11,13 +11,13 @@
 <link id="ico" rel="apple-touch-icon">
 <title>日月草的后宫</title>
 <style>
-:root{--g:#d9b779;--bar:calc(56px + env(safe-area-inset-bottom));--sf:env(safe-area-inset-top)}
+:root{--g:#d9b779;--gb:0px;--bar:calc(52px + env(safe-area-inset-bottom));--bt:calc(var(--bar) - var(--gb));--sf:env(safe-area-inset-top)}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 html,body{height:100%;background:#07070b;color:#fff;font:15px -apple-system,system-ui,"PingFang SC",sans-serif;overflow:hidden;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
 button{font:inherit;color:inherit;background:none;border:0}
 [hidden]{display:none!important}
 .serif{font-family:Didot,"Bodoni 72",Georgia,"Songti SC",serif}
-#feed{position:fixed;inset:0 0 calc(var(--bar) + 30px) 0;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#feed{position:fixed;inset:0 0 var(--bt) 0;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 section{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;background:#000;overflow:hidden}
 section>video,section>img{width:100%;height:100%;object-fit:contain;display:block}
 .dml{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -28,17 +28,17 @@ section>video,section>img{width:100%;height:100%;object-fit:contain;display:bloc
 #top>*{pointer-events:auto}
 #top button{font-size:21px;padding:6px 10px;text-shadow:0 0 6px #000}
 #ttl{letter-spacing:3px;font-size:16px;padding-left:10px;color:var(--g)}
-#rail{position:fixed;right:6px;bottom:calc(var(--bar) + 84px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
+#rail{position:fixed;right:6px;bottom:calc(var(--bt) + 58px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
 #rail button{width:54px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;text-shadow:0 0 5px #000}
 #rail i{font-style:normal;font-size:29px;line-height:1}
 #rail .off i{opacity:.35}#rail .on i{color:var(--g)}
-#pg{position:fixed;left:0;right:0;bottom:var(--bar);height:30px;z-index:5;touch-action:none}
-.tr{position:absolute;left:14px;right:14px;bottom:13px;height:2px;background:#ffffff40;border-radius:3px;transition:height .15s}
+#pg{position:fixed;left:0;right:0;bottom:var(--bt);height:36px;z-index:5;touch-action:none}
+.tr{position:absolute;left:14px;right:14px;bottom:10px;height:2px;background:#ffffff40;border-radius:3px;transition:height .15s}
 .tr i{display:block;height:100%;width:var(--p,0);background:#fff;border-radius:3px}
 .tr b{position:absolute;top:50%;left:var(--p,0);width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;box-shadow:0 0 6px #000;transition:transform .15s}
 #pg.on .tr{height:6px}#pg.on b{transform:scale(1.5)}
 #tm{position:absolute;bottom:44px;left:0;right:0;text-align:center;font-size:22px;opacity:0;text-shadow:0 0 6px #000}#pg.on #tm{opacity:1}
-#bar{position:fixed;left:0;right:0;bottom:var(--kb,0px);height:var(--bar);padding:0 8px env(safe-area-inset-bottom);background:#07070b;display:flex;align-items:center;gap:6px;z-index:6;border-top:1px solid #ffffff12}
+#bar{position:fixed;left:0;right:0;bottom:calc(var(--kb,0px) - var(--gb));height:var(--bar);padding:0 8px env(safe-area-inset-bottom);background:#07070b;display:flex;align-items:center;gap:6px;z-index:6;border-top:1px solid #ffffff12}
 .tab{width:56px;height:44px;font-size:13px;color:#fff8;position:relative;flex:none}
 .tab.on{color:#fff;font-weight:600}.tab.on::after{content:"";position:absolute;left:50%;bottom:3px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--g)}
 #dmf{flex:1;display:flex;gap:6px;min-width:0}
@@ -48,8 +48,8 @@ input::placeholder{color:#fff7}
 #imp{flex:1;height:38px}
 #sel{position:absolute;inset:0;background:#07070b;display:flex;align-items:center;justify-content:space-around;padding:0 6px env(safe-area-inset-bottom);font-size:14px}
 #sel button{padding:8px 10px}#sel .dg{color:#ff7a7a}
-#empty{position:fixed;inset:0 0 var(--bar);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.9;color:#fff9;padding:30px;pointer-events:none}
-#me{position:fixed;inset:0 0 var(--bar);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:calc(var(--sf) + 46px)}
+#empty{position:fixed;inset:0 0 var(--bt);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.9;color:#fff9;padding:30px;pointer-events:none}
+#me{position:fixed;inset:0 0 var(--bt);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:calc(var(--sf) + 46px)}
 .hdr{text-align:center;padding:6px 20px 14px}
 .av{width:92px;height:92px;border-radius:50%;margin:0 auto 12px;border:1.5px solid var(--g);box-shadow:0 0 0 4px #d9b77922,0 0 30px #d9b77933;background:#0d0b14 var(--lu) 50% 41%/200% no-repeat}
 .hdr h2{font-size:21px;font-weight:500;letter-spacing:3px}
@@ -72,9 +72,9 @@ input::placeholder{color:#fff7}
 #lock{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 50% 26%,#1d1733,#07070b 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:48px 40px calc(10vh + env(safe-area-inset-bottom))}
 #lock img{width:min(300px,74vw);margin-bottom:44px}
 #lock form{display:flex;flex-direction:column;gap:18px;width:min(360px,100%)}
-#lock input{height:58px;border-radius:29px;text-align:center;font-size:17px;letter-spacing:2px;background:#ffffff17;border:1px solid #ffffff1a}
+#lock input{flex:none;height:58px;border-radius:29px;text-align:center;font-size:17px;letter-spacing:2px;background:#ffffff17;border:1px solid #ffffff1a}
 #lock input:focus{border-color:var(--g)}
-#lock .gold{height:58px;border-radius:29px;font-size:17px;letter-spacing:3px;margin-top:10px}
+#lock .gold{flex:none;height:58px;border-radius:29px;font-size:17px;letter-spacing:3px;margin-top:10px}
 #fb{color:var(--g);padding:16px;margin-top:18px;font-size:15px;letter-spacing:1px}
 #msg{color:#ff8a8a;min-height:22px;font-size:14px;margin-top:10px}
 #sheet{position:fixed;inset:0;z-index:20;visibility:hidden;transition:visibility .3s}#sheet.on{visibility:visible}
@@ -116,7 +116,7 @@ input::placeholder{color:#fff7}
 </div>
 <div id="sheet"><div class="bk"></div><div class="pn"><div class="hd"><span id="sct"></span><button id="sx">✕</button></div><div id="cl"></div>
  <form id="cf" hidden><input id="ci" type="text" maxlength="500" autocomplete="off"><button class="gold">确定</button></form></div></div>
-<div id="lock"><img id="lg" alt=""><form id="lf"><input id="pw" type="password" placeholder="密码" autocomplete="current-password"><input id="pw2" type="password" placeholder="再输入一次密码" hidden><button class="gold" id="lb">解锁</button></form><button id="fb" hidden>使用面容 ID 解锁</button><div id="msg"></div></div>
+<div id="lock"><img id="lg" alt=""><form id="lf"><input id="pw" type="password" placeholder="密码" autocomplete="current-password"><input id="pw2" type="password" placeholder="再输入一次密码" hidden><button class="gold" id="lb">解锁</button></form><button id="fb" hidden>轻触屏幕任意位置，用面容 ID 解锁</button><div id="msg"></div></div>
 <input id="fi" type="file" accept="image/*,video/*" multiple hidden>
 <input id="fd" type="file" webkitdirectory multiple hidden>
 <input id="ff" type="file" multiple hidden>
@@ -148,7 +148,8 @@ const saveFD=async()=>kvPut('fav',await sealJ(FD));
 /* ---------- 解锁 / 面容ID ---------- */
 const msg=t=>$('#msg').textContent=t;
 const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))),ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-async function initLock(){const first=!(await kvGet('salt')),fid=!first&&!!(await kvGet('fid'));$('#pw2').hidden=!first;$('#lb').textContent=first?'设置密码并进入':'解锁';$('#fb').hidden=!fid;if(fid)fidUse(true)}
+var fidReady=false;$('#lock').addEventListener('click',e=>{if(fidReady&&!e.target.closest('input,#lb'))fidUse(false)});
+async function initLock(){const first=!(await kvGet('salt')),fid=!first&&!!(await kvGet('fid'));$('#pw2').hidden=!first;$('#lb').textContent=first?'设置密码并进入':'解锁';$('#fb').hidden=!fid;fidReady=fid;if(fid)fidUse(true)}
 async function enter(){$('#pw').value=$('#pw2').value='';msg('');$('#lock').hidden=true;await loadAll();showFeed(P,null,false)}
 $('#lf').onsubmit=async e=>{e.preventDefault();const pw=$('#pw').value;if(!pw)return;msg('');
  try{const salt0=await kvGet('salt');
@@ -161,7 +162,6 @@ async function fidUse(silent){try{const id=await kvGet('fid');if(!id)return;
  await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:ub(id)}],userVerification:'required',timeout:60000}});
  key=await crypto.subtle.importKey('raw',await kvGet('fk'),'AES-GCM',true,['encrypt','decrypt']);const c=await kvGet('chk');await open(c.iv,c.data);enter()}
  catch(e){key=null;if(!silent)msg('面容 ID 未通过，请输入密码')}}
-$('#fb').onclick=()=>fidUse(false);
 async function fidOn(){try{const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'日月草的后宫'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'me',displayName:'me'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});
  await kvPut('fid',b64(c.rawId));await kvPut('fk',await crypto.subtle.exportKey('raw',key));toast('面容 ID 已开启')}catch(e){toast('开启失败：请用主屏幕图标打开，并在系统设置允许面容 ID',3000)}}
 $('#cfg').onclick=async()=>{const on=!!(await kvGet('fid'));sh('设置',l=>{const p=document.createElement('p');p.innerHTML=`<span>面容 ID 解锁</span><em>${on?'已开启 · 点此关闭':'点此开启'}</em>`;p.onclick=async()=>{if(on){await kvPut('fid',null);await kvPut('fk',null);toast('已关闭')}else await fidOn();closeSheet()};
@@ -235,14 +235,18 @@ $('#sbk').onclick=()=>{fold=null;sm=false;S.clear();drawMe()};
 $('#sdel').onclick=async()=>{const f=FD.f.find(x=>x.id===fold);if(f&&confirm(`删除收藏夹“${f.n}”？里面的作品不会被删除。`)){FD.f=FD.f.filter(x=>x!==f);fold=null;await saveFD();drawMe()}};
 $('#bsel').onclick=()=>{sm=!sm;S.clear();drawMe()};$('#scan').onclick=$('#bsel').onclick;
 $('#sall').onclick=()=>{const l=curList();if(S.size===l.length)S.clear();else l.forEach(p=>S.add(p.id));drawMe()};
-/* 滑动连续多选：横向划动，或长按后拖动；靠近屏幕上下缘自动滚动 */
-{const g=$('#grid'),me=$('#me');let lp,m0=true,sx=0,sy=0,sc=null,lx=0,ly=0,al=0;
- const under=()=>{const el=document.elementFromPoint(lx,ly),c=el&&el.closest&&el.closest('[data-id]');if(c)tog(c,m0)};
- const loop=()=>{if(!drag)return;if(ly<150)me.scrollTop-=16;else if(ly>innerHeight-190)me.scrollTop+=16;under();al=requestAnimationFrame(loop)};
- const begin=()=>{if(drag)return;drag=true;skip=true;clearTimeout(lp);if(sc){m0=!S.has(sc.dataset.id);tog(sc,m0)}navigator.vibrate&&navigator.vibrate(8);cancelAnimationFrame(al);loop()};
- g.addEventListener('touchstart',e=>{if(!sm)return;const t=e.touches[0];sx=lx=t.clientX;sy=ly=t.clientY;sc=e.target.closest('[data-id]');clearTimeout(lp);lp=setTimeout(begin,260)},{passive:true});
- g.addEventListener('touchmove',e=>{if(!sm)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;if(!drag){const dx=Math.abs(lx-sx),dy=Math.abs(ly-sy);if(dx>10&&dx>dy)begin();else if(dy>10)clearTimeout(lp)}if(drag&&e.cancelable)e.preventDefault()},{passive:false});
- const end=()=>{clearTimeout(lp);drag=false;cancelAnimationFrame(al);setTimeout(()=>skip=false,350)};g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
+/* 滑动连续多选：横向划动逐个选；长按后上下滑动整行选；靠近屏幕上下缘自动滚动 */
+{const g=$('#grid'),me=$('#me');let lp,m0=true,sx=0,sy=0,sc=null,lx=0,ly=0,al=0,md='',lr=-1;
+ const idx=c=>Array.prototype.indexOf.call(g.children,c);
+ const rowSel=r=>{for(let k=r*3;k<r*3+3;k++){const e=g.children[k];if(e)tog(e,m0)}};
+ const under=()=>{const el=document.elementFromPoint(lx,ly),c=el&&el.closest&&el.closest('[data-id]');if(!c)return;
+  if(md==='r'){const r=Math.floor(idx(c)/3);if(lr<0)lr=r;for(let k=Math.min(lr,r);k<=Math.max(lr,r);k++)rowSel(k);lr=r}else if(md==='c')tog(c,m0)};
+ const loop=()=>{if(!drag)return;if(ly<150)me.scrollTop-=16;else if(ly>innerHeight-190)me.scrollTop+=16;
+  if(!md&&(Math.abs(ly-sy)>8||Math.abs(lx-sx)>8))md=Math.abs(ly-sy)>=Math.abs(lx-sx)?'r':'c';under();al=requestAnimationFrame(loop)};
+ const begin=h=>{if(drag)return;drag=true;skip=true;clearTimeout(lp);md=h?'c':'';lr=-1;if(sc){m0=!S.has(sc.dataset.id);if(h)tog(sc,m0)}navigator.vibrate&&navigator.vibrate(8);cancelAnimationFrame(al);loop()};
+ g.addEventListener('touchstart',e=>{if(!sm)return;const t=e.touches[0];sx=lx=t.clientX;sy=ly=t.clientY;sc=e.target.closest('[data-id]');clearTimeout(lp);lp=setTimeout(()=>begin(false),260)},{passive:true});
+ g.addEventListener('touchmove',e=>{if(!sm)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;if(!drag){const dx=Math.abs(lx-sx),dy=Math.abs(ly-sy);if(dx>10&&dx>dy)begin(true);else if(dy>10)clearTimeout(lp)}if(drag&&e.cancelable)e.preventDefault()},{passive:false});
+ const end=()=>{clearTimeout(lp);if(drag&&!md&&sc)tog(sc,m0);drag=false;md='';lr=-1;cancelAnimationFrame(al);setTimeout(()=>skip=false,350)};g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
 var drag=false;
 function favSheet(ids,done){sh('收藏到…',l=>{const t=document.createElement('p');t.className='tip';t.textContent='选择要放进的收藏夹，也可以在下方新建一个。';l.append(t);
  for(const f of FD.f){const p=document.createElement('p'),all=ids.every(i=>f.ids.includes(i));p.innerHTML='<span></span><em>'+(all?'✓ 已收藏':'')+'</em>';p.firstChild.textContent=f.n+'  ('+f.ids.length+')';
@@ -297,7 +301,9 @@ $('#bx').onclick=async()=>{const s=secs[cur];if(!s||!confirm('删除这个作品
  pg.addEventListener('touchmove',e=>{if(pgD){e.preventDefault();seek(e)}},{passive:false});
  const end=()=>{if(!pgD)return;pgD=false;pg.classList.remove('on');const s=secs[cur];s&&s.x.media&&s.x.media.play().catch(()=>{})};pg.addEventListener('touchend',end);pg.addEventListener('touchcancel',end)}
 
-if(window.visualViewport){const f=()=>{const d=innerHeight-visualViewport.height-visualViewport.offsetTop,a=document.activeElement;document.documentElement.style.setProperty('--kb',(a&&a.tagName==='INPUT'&&d>120?d:0)+'px')};visualViewport.onresize=visualViewport.onscroll=f;document.addEventListener('focusout',()=>setTimeout(f,50))}
+if(window.visualViewport){const f=()=>{const d=innerHeight-visualViewport.height-visualViewport.offsetTop,a=document.activeElement;const k=a&&a.tagName==='INPUT'&&d>120?d:0;document.documentElement.style.setProperty('--kb',k+'px');document.documentElement.style.setProperty('--gb',(k?0:GB)+'px')};visualViewport.onresize=visualViewport.onscroll=f;document.addEventListener('focusout',()=>setTimeout(f,50))}
 $('#snd').onclick=()=>{const s=secs[cur];if(s&&s.x.media){s.x.media.muted=false;s.x.media.play().catch(()=>{})}};
+var GB=0;function gap(){const st=matchMedia('(display-mode: standalone)').matches||navigator.standalone,g=Math.round(screen.height-innerHeight);GB=(st&&g>8&&g<=80)?g:0;document.documentElement.style.setProperty('--gb',GB+'px')}
+gap();addEventListener('resize',gap);addEventListener('orientationchange',()=>setTimeout(gap,300));
 raf=requestAnimationFrame(tick);initLock();
 </script></body></html>
