@@ -24,22 +24,22 @@ section>video,section>img{width:100%;height:100%;object-fit:contain;display:bloc
 .dml span{position:absolute;left:100%;white-space:nowrap;font-size:18px;font-weight:600;text-shadow:0 0 3px #000,0 0 3px #000;animation:fly 9s linear forwards;will-change:transform}
 .dml .me{outline:1px solid var(--g);border-radius:14px;padding:0 9px}
 @keyframes fly{to{transform:translateX(calc(-100vw - 100%))}}
-#top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(var(--sf) + 6px) 8px 22px;background:linear-gradient(#000a,transparent);pointer-events:none}
+#top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(var(--sf) + 6px) 8px 8px;pointer-events:none}
 #top>*{pointer-events:auto}
 #top button{font-size:21px;padding:6px 6px;text-shadow:0 0 6px #000}#top .tg{font-size:13px;padding:3px 8px;margin-right:2px;border:1px solid #ffffff66;border-radius:14px;color:#fffd;text-shadow:none;background:#0005}#top .tg.on{background:var(--g);border-color:var(--g);color:#1a1206;font-weight:600}
-#ttl{letter-spacing:3px;font-size:16px;padding-left:10px;color:var(--g)}
-#rail{position:fixed;right:6px;bottom:calc(var(--bt) + 58px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
+#ttl{letter-spacing:3px;font-size:16px;padding-left:10px;color:var(--g);text-shadow:0 0 6px #000}
+#rail{position:fixed;right:6px;bottom:calc(var(--bt) + 66px);z-index:5;display:flex;flex-direction:column;gap:16px;align-items:center}
 #rail button{width:54px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;text-shadow:0 0 5px #000}
 #rail i{font-style:normal;font-size:29px;line-height:1}
 #rail .off i{opacity:.35}#rail .on i{color:var(--g)}
-#pg{position:fixed;left:0;right:0;bottom:var(--bt);height:36px;z-index:5;touch-action:none}
-.tr{position:absolute;left:14px;right:14px;bottom:10px;height:2px;background:#ffffff40;border-radius:3px;transition:height .15s}
+#pg{position:fixed;left:0;right:0;bottom:calc(var(--bt) + 8px);height:30px;z-index:5;touch-action:none}
+.tr{position:absolute;left:14px;right:14px;bottom:12px;height:2px;background:#ffffff40;border-radius:3px;transition:height .15s}
 .tr i{display:block;height:100%;width:var(--p,0);background:#fff;border-radius:3px}
 .tr b{position:absolute;top:50%;left:var(--p,0);width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;box-shadow:0 0 6px #000;transition:transform .15s}
 #pg.on .tr{height:6px}#pg.on b{transform:scale(1.5)}
 #tm{position:absolute;bottom:44px;left:0;right:0;text-align:center;font-size:22px;opacity:0;text-shadow:0 0 6px #000}#pg.on #tm{opacity:1}
 #bar{position:fixed;left:0;right:0;bottom:var(--kb,0px);height:var(--bar);padding:0 8px var(--sb);background:#07070b;display:flex;align-items:center;gap:6px;z-index:6;border-top:1px solid #ffffff12}
-.tab{width:56px;height:44px;font-size:13px;color:#fff8;position:relative;flex:none}
+.tab{width:64px;height:52px;font-size:13px;color:#fff8;position:relative;flex:none}
 .tab.on{color:#fff;font-weight:600}.tab.on::after{content:"";position:absolute;left:50%;bottom:3px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--g)}
 #dmf{flex:1;display:flex;gap:6px;min-width:0}
 input[type=text],input[type=password]{flex:1;min-width:0;height:38px;border-radius:19px;border:0;padding:0 15px;font-size:16px;color:#fff;background:#ffffff1f;outline:0;user-select:text;-webkit-user-select:text}
@@ -89,6 +89,7 @@ input::placeholder{color:#fff7}
 #cf{display:flex;gap:8px;padding:10px 14px}
 #toast{position:fixed;left:50%;top:calc(var(--sf) + 56px);transform:translateX(-50%);background:#26242fee;padding:9px 18px;border-radius:20px;z-index:60;font-size:14px;white-space:nowrap}
 .imm #top,.imm #rail,.imm #bar,.imm #pg,.imm #snd,.imm #toast,.imm #sheet{display:none!important}.imm #feed{bottom:0}
+html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail button:active,#sel button:active{opacity:.55}
 </style></head><body>
 <div id="feedv" hidden>
  <div id="feed"></div><div id="empty" hidden>还没有作品<br>去「我的」点“导入作品”开始</div>
@@ -151,7 +152,7 @@ const msg=t=>$('#msg').textContent=t;
 const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))),ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 var fidReady=false;$('#lock').addEventListener('click',e=>{if(fidReady&&!e.target.closest('input,#lb'))fidUse(false)});
 async function initLock(){const first=!(await kvGet('salt')),fid=!first&&!!(await kvGet('fid'));$('#pw2').hidden=!first;$('#lb').textContent=first?'设置密码并进入':'解锁';$('#fb').hidden=!fid;fidReady=fid;if(fid)fidUse(true)}
-async function enter(){$('#pw').value=$('#pw2').value='';msg('');$('#lock').hidden=true;await loadAll();showFeed(P,null,false)}
+async function enter(){$('#pw').value=$('#pw2').value='';msg('');$('#lock').hidden=true;await loadAll();showFeed(P,null,false);scanDark()}
 $('#lf').onsubmit=async e=>{e.preventDefault();const pw=$('#pw').value;if(!pw)return;msg('');
  try{const salt0=await kvGet('salt');
   if(!salt0){if(pw.length<6)return msg('密码至少 6 位');if(pw!==$('#pw2').value)return msg('两次输入不一致');
@@ -166,7 +167,7 @@ async function fidUse(silent){try{const id=await kvGet('fid');if(!id)return;
 async function fidOn(){try{const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'日月草的后宫'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'me',displayName:'me'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});
  await kvPut('fid',b64(c.rawId));await kvPut('fk',await crypto.subtle.exportKey('raw',key));toast('面容 ID 已开启')}catch(e){toast('开启失败：请用主屏幕图标打开，并在系统设置允许面容 ID',3000)}}
 $('#cfg').onclick=async()=>{const on=!!(await kvGet('fid'));sh('设置',l=>{const p=document.createElement('p');p.innerHTML=`<span>面容 ID 解锁</span><em>${on?'已开启 · 点此关闭':'点此开启'}</em>`;p.onclick=async()=>{if(on){await kvPut('fid',null);await kvPut('fk',null);toast('已关闭')}else await fidOn();closeSheet()};
- const t=document.createElement('p');t.className='tip';t.textContent='面容 ID 只是快捷入口，密码仍然有效。忘记密码且未开启面容 ID 时数据无法恢复。';l.append(p,t)})};
+ const t=document.createElement('p');t.className='tip';t.textContent='面容 ID 只是快捷入口，密码仍然有效。忘记密码且未开启面容 ID 时数据无法恢复。';const q=document.createElement('p'),nb=P.filter(z=>!z.th||z.bad).length;q.innerHTML='<span>修复缩略图<small>重新生成黑色或缺失的封面</small></span><em>'+(nb?nb+' 个待修复 ›':'全部正常')+'</em>';q.onclick=()=>{closeSheet();regen()};l.append(p,q,t)})};
 function lock(){imm&&setImm(false);key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;S.clear();sm=false;closeSheet();$('#feedv').hidden=$('#me').hidden=true;view='';$('#lock').hidden=false;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);initLock()}
 $('#lk').onclick=lock;
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(key&&!picking&&!busy)lock()}else setTimeout(()=>picking=false,1500)});
@@ -194,11 +195,24 @@ $('#add').onclick=$('#imp').onclick=()=>sh('导入作品',l=>{
 for(const i of ['fi','fd','ff']){const e=$('#'+i);e.oncancel=()=>picking=false;e.onchange=()=>{const fs=[...e.files];e.value='';picking=false;imp(fs)}}
 const isM=f=>/^(image|video)\//.test(f.type)||/\.(jpe?g|png|gif|webp|heic|heif|mp4|mov|m4v|webm)$/i.test(f.name);
 const mimeOf=f=>f.type||(/\.mov$/i.test(f.name)?'video/quicktime':/\.(mp4|m4v)$/i.test(f.name)?'video/mp4':'image/jpeg');
-async function thumb(f,v){const u=URL.createObjectURL(f);let el;try{let w,h;
- if(v){el=document.createElement('video');el.muted=true;el.preload='auto';el.setAttribute('playsinline','');el.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none';document.body.append(el);el.src=u;await new Promise((ok,no)=>{el.onloadedmetadata=ok;el.onerror=no;setTimeout(no,8000)});try{await el.play();el.pause()}catch(e){}el.currentTime=Math.min(.5,(el.duration||1)/2);await new Promise(ok=>{el.onseeked=ok;setTimeout(ok,1500)});await new Promise(r=>setTimeout(r,120));w=el.videoWidth;h=el.videoHeight}
- else{el=new Image();el.src=u;await el.decode();w=el.naturalWidth;h=el.naturalHeight}
- if(!w)return null;const W=360,H=480,c=document.createElement('canvas');c.width=W;c.height=H;const k=Math.max(W/w,H/h);c.getContext('2d').drawImage(el,(W-w*k)/2,(H-h*k)/2,w*k,h*k);
- return await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72))}catch(e){return null}finally{URL.revokeObjectURL(u);if(el&&el.remove)el.remove()}}
+function dark(src){const t=document.createElement('canvas');t.width=t.height=16;const g=t.getContext('2d');g.drawImage(src,0,0,16,16);const d=g.getImageData(0,0,16,16).data;let s=0,m=0;for(let i=0;i<d.length;i+=4){const y=.3*d[i]+.59*d[i+1]+.11*d[i+2];s+=y;if(y>m)m=y}return s/256<12&&m<50}
+async function thumb(f,v){const u=URL.createObjectURL(f);let el;try{let w=0,h=0,c=null;
+ const draw=()=>{const W=360,H=480,k=Math.max(W/w,H/h),cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.getContext('2d').drawImage(el,(W-w*k)/2,(H-h*k)/2,w*k,h*k);return cv};
+ if(v){el=document.createElement('video');el.muted=true;el.preload='auto';el.setAttribute('playsinline','');el.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none';document.body.append(el);el.src=u;
+  await new Promise((ok,no)=>{el.onloadedmetadata=ok;el.onerror=no;setTimeout(no,8000)});try{await el.play();el.pause()}catch(e){}
+  const d=el.duration||1;
+  for(const r of [.04,.2,.4,.7]){el.currentTime=Math.min(Math.max(0,d-.2),d*r);await new Promise(ok=>{el.onseeked=ok;setTimeout(ok,1500)});
+   await new Promise(ok=>{let n=false;const fin=()=>{if(!n){n=true;ok()}};if(el.requestVideoFrameCallback)el.requestVideoFrameCallback(fin);setTimeout(fin,350)});
+   w=el.videoWidth;h=el.videoHeight;if(!w)continue;c=draw();if(!dark(c))break}}
+ else{el=new Image();el.src=u;await el.decode();w=el.naturalWidth;h=el.naturalHeight;c=draw()}
+ if(!c)return null;return await new Promise(ok=>c.toBlob(b=>b?b.arrayBuffer().then(ok):ok(null),'image/jpeg',.72))}catch(e){return null}finally{URL.revokeObjectURL(u);if(el&&el.remove)el.remove()}}
+async function scanDark(){for(const p of P){if(!p.th||p.bad!==undefined)continue;try{const i=new Image();i.src=p.th;await i.decode();p.bad=dark(i)}catch(e){p.bad=true}await new Promise(r=>setTimeout(r,0))}if(view==='me')drawMe()}
+async function regen(){const L=P.filter(p=>!p.th||p.bad);if(!L.length)return toast('缩略图都正常');busy=true;let n=0;
+ for(const p of L){toast(`修复缩略图 ${++n}/${L.length}`,0);
+  try{const bl=await readBlob({pid:p.id,nc:p.nc,mime:p.mime});if(!bl)continue;const ab=await thumb(bl,p.v);if(!ab)continue;const t=await seal(ab),r=await tx('posts','readonly',st=>st.get(p.id));if(!r)continue;
+   r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th&&URL.revokeObjectURL(p.th);p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}));p.bad=false}catch(e){}
+  await new Promise(r=>setTimeout(r,20))}
+ busy=false;toast('缩略图修复完成');if(view==='me')drawMe()}
 async function imp(fs){fs=fs.filter(isM);if(!fs.length||!key)return toast('没有可导入的照片或视频');busy=true;let n=0,bad=0,wl=null;
  try{wl=navigator.wakeLock&&await navigator.wakeLock.request('screen')}catch(e){}
  const base=Date.now()*1000,CH=6*1048576;
@@ -273,11 +287,13 @@ function activate(i){if(i<0||i===cur)return;if(secs[cur])pause(secs[cur]);cur=i;
 function load(s){const x=s.x;if(x.p)return x.p;const g=x.g;
  return x.p=(async()=>{const bl=await readBlob(x);if(!bl||!key||x.g!==g)return;x.url=URL.createObjectURL(bl);const el=x.v?(VP.pop()||mkV()):document.createElement('img');if(x.v){el.loop=!aut;el.muted=false;el.onended=()=>onEnd(s);el.onclick=()=>el.paused?el.play():el.pause()}
   el.addEventListener(x.v?'loadeddata':'load',()=>lazyTh(s),{once:true});el.src=x.url;s.prepend(el);x.media=el;await notes(s);if(s===secs[cur])upd()})()}
-async function lazyTh(s){const x=s.x,p=P.find(q=>q.id===x.pid),el=x.media;if(!p||p.th||!el||!key)return;const w=el.videoWidth||el.naturalWidth,h=el.videoHeight||el.naturalHeight;if(!w)return;
+async function lazyTh(s,tries=0){const x=s.x,p=P.find(q=>q.id===x.pid),el=x.media;if(!p||(p.th&&!p.bad)||!el||!key)return;const w=el.videoWidth||el.naturalWidth,h=el.videoHeight||el.naturalHeight;if(!w)return;
  try{const W=360,H=480,c=document.createElement('canvas');c.width=W;c.height=H;const k=Math.max(W/w,H/h);c.getContext('2d').drawImage(el,(W-w*k)/2,(H-h*k)/2,w*k,h*k);
- const ab=await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72)),t=await seal(ab),r=await tx('posts','readonly',st=>st.get(x.pid));if(!r)return;r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}))}catch(e){}}
+ if(dark(c)&&tries<3){setTimeout(()=>lazyTh(s,tries+1),1500);return}
+ const ab=await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72)),t=await seal(ab),r=await tx('posts','readonly',st=>st.get(x.pid));if(!r)return;
+ r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th&&URL.revokeObjectURL(p.th);p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}));p.bad=false}catch(e){}}
 function unload(s){const x=s.x;x.g++;x.p=null;if(x.media){const m=x.media;if(x.v)m.pause();m.removeAttribute('src');if(x.v){m.load();m.onclick=null;m.onended=null;VP.push(m)}m.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
-function play(s){const x=s.x;if(!x.media)return;x.t0=performance.now();x.last=-1;x.dirty=false;x.adv=false;if(x.v)x.media.loop=!aut;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
+function play(s){const x=s.x;if(!x.media)return;x.t0=performance.now();x.last=-1;x.i=0;x.dirty=false;x.adv=false;if(x.v)x.media.loop=!aut;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
 function pause(s){const x=s.x;if(x.v&&x.media)x.media.pause();s.querySelector('.dml').innerHTML=''}
 const isFav=id=>FD.f.some(f=>f.ids.includes(id));
 function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd').classList.toggle('off',!dmOn);const f=s&&isFav(s.x.pid);$('#fv').classList.toggle('on',!!f);$('#fv i').textContent=f?'★':'☆'}
@@ -286,8 +302,15 @@ function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd')
 async function notes(s){const x=s.x,rs=await tx('notes','readonly',st=>st.index('p').getAll(x.pid));x.cm=[];x.dm=[];for(const r of rs){const o=await openJ(r.iv,r.data);o.id=r.id;(r.k==='c'?x.cm:x.dm).push(o)}x.cm.sort((a,b)=>a.c-b.c);x.dm.sort((a,b)=>a.t-b.t)}
 async function saveNote(s,k,o){const id=crypto.randomUUID(),q=await sealJ(o);await tx('notes','readwrite',st=>st.put({id,pid:s.x.pid,k,iv:q.iv,data:q.data}));return id}
 function spawn(s,d,mine){if(!dmOn)return;const e=document.createElement('span');e.textContent=d.text;s.x.lane=(s.x.lane+1)%7;e.style.top=(14+s.x.lane*6)+'%';if(mine)e.className='me';e.onanimationend=()=>e.remove();s.querySelector('.dml').append(e)}
-function tick(){raf=requestAnimationFrame(tick);const s=secs[cur];$('#pg').hidden=!(s&&s.x.v&&s.x.media);$('#snd').hidden=!(s&&s.x.v&&s.x.media&&s.x.media.muted);if(!s||!s.x.media)return;const x=s.x,c=clock(s);if(aut&&!x.v&&!x.dirty&&!x.adv&&performance.now()-x.t0>6000){x.adv=true;next()}if(c<x.last)x.last=-1;if(!pgD)for(const d of x.dm)if(d.t>x.last&&d.t<=c)spawn(s,d);x.last=c;const du=x.v&&x.media.duration;$('#pg').style.setProperty('--p',du?(c/du*100)+'%':'0%')}
-$('#dmf').onsubmit=async e=>{e.preventDefault();const s=secs[cur],t=$('#dmi').value.trim();if(!s||!t||!s.x.media)return;$('#dmi').value='';const x=s.x,d={t:+clock(s).toFixed(2),text:t,c:Date.now()};x.last=Math.max(x.last,d.t);x.dm.push(d);spawn(s,d,1);d.id=await saveNote(s,'d',d);x.dm.sort((a,b)=>a.t-b.t)};
+const pgE=$('#pg'),sndE=$('#snd');let _ph,_sh,_pp=-1;
+function tick(){raf=requestAnimationFrame(tick);const s=secs[cur],m=s&&s.x.media,vv=!!(m&&s.x.v);
+ if(_ph!==!vv){_ph=!vv;pgE.hidden=!vv}const sh=!(vv&&m.muted);if(_sh!==sh){_sh=sh;sndE.hidden=sh}
+ if(!s||!m)return;const x=s.x,c=clock(s);
+ if(aut&&!x.v&&!x.dirty&&!x.adv&&performance.now()-x.t0>6000){x.adv=true;next()}
+ if(c<x.last){x.last=-1;x.i=0}
+ if(!pgD){let i=x.i||0;while(i<x.dm.length&&x.dm[i].t<=c){if(x.dm[i].t>x.last)spawn(s,x.dm[i]);i++}x.i=i}
+ x.last=c;const du=x.v&&m.duration,p=du?Math.round(c/du*1000)/10:0;if(p!==_pp){_pp=p;pgE.style.setProperty('--p',p+'%')}}
+$('#dmf').onsubmit=async e=>{e.preventDefault();const s=secs[cur],t=$('#dmi').value.trim();if(!s||!t||!s.x.media)return;$('#dmi').value='';const x=s.x,d={t:+clock(s).toFixed(2),text:t,c:Date.now()};x.last=Math.max(x.last,d.t);x.dm.push(d);x.dm.sort((a,b)=>a.t-b.t);x.i=0;spawn(s,d,1);d.id=await saveNote(s,'d',d);x.dm.sort((a,b)=>a.t-b.t)};
 $('#bd').onclick=()=>{dmOn=!dmOn;if(!dmOn)secs.forEach(s=>s.querySelector('.dml').innerHTML='');upd()};
 $('#bc').onclick=()=>{const s=secs[cur];if(!s)return;sh('',l=>{const x=s.x;$('#sct').textContent=x.cm.length+' 条评论';if(!x.cm.length)l.innerHTML='<div class="nil">还没有评论，写下第一条</div>';
  for(const c of x.cm){const p=document.createElement('p'),d=document.createElement('div');d.textContent=c.text;const sm2=document.createElement('small');sm2.textContent=new Date(c.c).toLocaleString('zh-CN',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});d.append(sm2);
@@ -297,7 +320,7 @@ $('#bx').onclick=async()=>{const s=secs[cur];if(!s||!confirm('删除这个作品
 
 /* ---------- 可拖动进度条 ---------- */
 {const pg=$('#pg');
- const seek=e=>{const s=secs[cur];if(!s||!s.x.v||!s.x.media)return;const r=pg.querySelector('.tr').getBoundingClientRect(),m=s.x.media,t=Math.min(1,Math.max(0,(e.touches[0].clientX-r.left)/r.width))*(m.duration||0);m.currentTime=t;s.x.last=t;s.querySelector('.dml').innerHTML='';$('#tm').textContent=fmt(t)+' / '+fmt(m.duration);pg.style.setProperty('--p',(t/(m.duration||1)*100)+'%')};
+ const seek=e=>{const s=secs[cur];if(!s||!s.x.v||!s.x.media)return;const r=pg.querySelector('.tr').getBoundingClientRect(),m=s.x.media,t=Math.min(1,Math.max(0,(e.touches[0].clientX-r.left)/r.width))*(m.duration||0);m.currentTime=t;s.x.last=t;s.x.i=0;s.querySelector('.dml').innerHTML='';$('#tm').textContent=fmt(t)+' / '+fmt(m.duration);pg.style.setProperty('--p',(t/(m.duration||1)*100)+'%')};
  pg.addEventListener('touchstart',e=>{const s=secs[cur];if(!s||!s.x.v||!s.x.media)return;pgD=true;pg.classList.add('on');s.x.media.pause();seek(e)},{passive:true});
  pg.addEventListener('touchmove',e=>{if(pgD){e.preventDefault();seek(e)}},{passive:false});
  const end=()=>{if(!pgD)return;pgD=false;pg.classList.remove('on');const s=secs[cur];s&&s.x.media&&s.x.media.play().catch(()=>{})};pg.addEventListener('touchend',end);pg.addEventListener('touchcancel',end)}
