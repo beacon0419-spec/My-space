@@ -90,6 +90,11 @@ input::placeholder{color:#fff7}
 #toast{position:fixed;left:50%;top:calc(var(--sf) + 56px);transform:translateX(-50%);background:#26242fee;padding:9px 18px;border-radius:20px;z-index:60;font-size:14px;white-space:nowrap}
 .imm #top,.imm #rail,.imm #bar,.imm #pg,.imm #snd,.imm #toast,.imm #sheet{display:none!important}.imm #feed{bottom:0}
 html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail button:active,#sel button:active{opacity:.55}
+.dup{padding:6px 14px 30px}.dup .nil{padding:20px 8px;font-size:14px;color:#fffc}.dup .nil small{color:#fff8;line-height:1.9;display:inline-block;margin-top:6px}.dup h3{font-weight:500;font-size:15px;margin:18px 0 8px;color:var(--g);letter-spacing:2px}
+.dup .big{display:block;width:100%;height:48px;margin:6px 0 10px;border-radius:24px}.dup .gp{border:1px solid #ffffff14;border-radius:14px;padding:10px;margin-bottom:12px;background:#ffffff08}
+.dup .rw{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}.dup .it{flex:none;width:86px;aspect-ratio:3/4;border-radius:8px;background:#15141d center/cover;position:relative}
+.dup .it b{position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;background:#000a;text-align:center;line-height:24px;font-size:12px;font-weight:400}.dup .it i{position:absolute;left:5px;bottom:4px;font-size:11px;font-style:normal}
+.dup .ac{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;color:#fff9}.dup .ac button{color:var(--g);font-size:13px;padding:4px 0}
 </style></head><body>
 <div id="feedv" hidden>
  <div id="feed"></div><div id="empty" hidden>还没有作品<br>去「我的」点“导入作品”开始</div>
@@ -104,7 +109,7 @@ html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail
 <div id="me" hidden>
  <div class="hdr"><div class="av" id="av"></div><h2 class="serif">日月草的后宫</h2><p class="serif">SUN MOON GRASS</p>
   <div class="st"><div><b id="n1">0</b><span>作品</span></div><div><b id="n2">0</b><span>收藏夹</span></div></div></div>
- <div class="tabs"><button id="t1" class="on">作品</button><button id="t2">收藏夹</button><button id="bsel" class="sb">选择</button></div>
+ <div class="tabs"><button id="t1" class="on">作品</button><button id="t2">收藏夹</button><button id="t3">查重</button><button id="bsel" class="sb">选择</button></div>
  <div id="sub" hidden><button id="sbk">‹ 返回</button><b id="sn"></b><button id="sdel">删除收藏夹</button></div>
  <div id="grid"></div>
 </div>
@@ -168,7 +173,7 @@ async function fidOn(){try{const c=await navigator.credentials.create({publicKey
  await kvPut('fid',b64(c.rawId));await kvPut('fk',await crypto.subtle.exportKey('raw',key));toast('面容 ID 已开启')}catch(e){toast('开启失败：请用主屏幕图标打开，并在系统设置允许面容 ID',3000)}}
 $('#cfg').onclick=async()=>{const on=!!(await kvGet('fid'));sh('设置',l=>{const p=document.createElement('p');p.innerHTML=`<span>面容 ID 解锁</span><em>${on?'已开启 · 点此关闭':'点此开启'}</em>`;p.onclick=async()=>{if(on){await kvPut('fid',null);await kvPut('fk',null);toast('已关闭')}else await fidOn();closeSheet()};
  const t=document.createElement('p');t.className='tip';t.textContent='面容 ID 只是快捷入口，密码仍然有效。忘记密码且未开启面容 ID 时数据无法恢复。';const q=document.createElement('p'),nb=P.filter(z=>!z.th||z.bad).length;q.innerHTML='<span>修复缩略图<small>重新生成黑色或缺失的封面</small></span><em>'+(nb?nb+' 个待修复 ›':'全部正常')+'</em>';q.onclick=()=>{closeSheet();regen()};l.append(p,q,t)})};
-function lock(){imm&&setImm(false);key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;S.clear();sm=false;closeSheet();$('#feedv').hidden=$('#me').hidden=true;view='';$('#lock').hidden=false;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);initLock()}
+function lock(){imm&&setImm(false);DUP=null;key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;S.clear();sm=false;closeSheet();$('#feedv').hidden=$('#me').hidden=true;view='';$('#lock').hidden=false;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);initLock()}
 $('#lk').onclick=lock;
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(key&&!picking&&!busy)lock()}else setTimeout(()=>picking=false,1500)});
 addEventListener('pagehide',()=>{if(key&&!busy)lock()});
@@ -185,7 +190,7 @@ $('#cf').onsubmit=async e=>{e.preventDefault();const t=$('#ci').value.trim();if(
 
 /* ---------- 载入 ---------- */
 async function loadAll(){P.length=0;const ps=await tx('posts','readonly',s=>s.getAll());ps.sort((a,b)=>b.ord-a.ord);
- for(const p of ps){const m=await openJ(p.iv,p.data);P.push({id:p.id,v:m.t.startsWith('video'),mime:m.t,nc:m.nc,_o:p.ord,th:p.td?URL.createObjectURL(new Blob([await open(p.ti,p.td)],{type:'image/jpeg'})):null})}
+ for(const p of ps){const m=await openJ(p.iv,p.data);P.push({id:p.id,v:m.t.startsWith('video'),mime:m.t,nc:m.nc,fp:m.fp,_o:p.ord,th:p.td?URL.createObjectURL(new Blob([await open(p.ti,p.td)],{type:'image/jpeg'})):null})}
  const f=await kvGet('fav');FD=f?await openJ(f.iv,f.data):{f:[{id:'d',n:'我的收藏',ids:[]}]}}
 
 /* ---------- 导入 ---------- */
@@ -213,18 +218,67 @@ async function regen(){const L=P.filter(p=>!p.th||p.bad);if(!L.length)return toa
    r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th&&URL.revokeObjectURL(p.th);p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}));p.bad=false}catch(e){}
   await new Promise(r=>setTimeout(r,20))}
  busy=false;toast('缩略图修复完成');if(view==='me')drawMe()}
-async function imp(fs){fs=fs.filter(isM);if(!fs.length||!key)return toast('没有可导入的照片或视频');busy=true;let n=0,bad=0,wl=null;
+async function imp(fs){fs=fs.filter(isM);if(!fs.length||!key)return toast('没有可导入的照片或视频');busy=true;let n=0,bad=0,dup=0,wl=null;
  try{wl=navigator.wakeLock&&await navigator.wakeLock.request('screen')}catch(e){}
  const base=Date.now()*1000,CH=6*1048576;
  for(let i=0;i<fs.length;i++){const f=fs[i];toast(`加密导入 ${i+1}/${fs.length}（请保持亮屏并留在本页）`,0);
-  try{const id=crypto.randomUUID(),t=mimeOf(f),v=t.startsWith('video'),nc=Math.max(1,Math.ceil(f.size/CH)),tb=await thumb(f,v);
+  try{const id=crypto.randomUUID(),t=mimeOf(f),v=t.startsWith('video'),nc=Math.max(1,Math.ceil(f.size/CH)),fp=await fpOf(f.size,(a,e)=>f.slice(a,e).arrayBuffer());if(P.some(q=>q.fp===fp)){dup++;continue}const tb=await thumb(f,v);
    for(let k=0;k<nc;k++){const b=await seal(await f.slice(k*CH,(k+1)*CH).arrayBuffer());await tx('blobs','readwrite',s=>s.put({id:id+'#'+k,iv:b.iv,data:b.data}))}
-   const m=await sealJ({t,n:f.name,nc}),th=tb&&await seal(tb),o=base+fs.length-i;
+   const m=await sealJ({t,n:f.name,nc,fp}),th=tb&&await seal(tb),o=base+fs.length-i;
    await tx('posts','readwrite',s=>s.put({id,ord:o,iv:m.iv,data:m.data,ti:th&&th.iv,td:th&&th.data}));
-   P.push({id,v,mime:t,nc,_o:o,th:tb?URL.createObjectURL(new Blob([tb],{type:'image/jpeg'})):null});n++}catch(e){bad++}
+   P.push({id,v,mime:t,nc,fp,_o:o,th:tb?URL.createObjectURL(new Blob([tb],{type:'image/jpeg'})):null});n++}catch(e){bad++}
   if(i%4===3)await new Promise(r=>setTimeout(r,30))}
  P.sort((a,b)=>(b._o||0)-(a._o||0));try{wl&&wl.release()}catch(e){}
- toast(bad?`已导入 ${n} 个，${bad} 个失败（可能空间不足）`:`已导入 ${n} 个`,3000);busy=false;view==='me'?drawMe():showFeed(P,null,false)}
+ DUP=null;toast(`已导入 ${n} 个`+(dup?`，跳过 ${dup} 个重复`:'')+(bad?`，${bad} 个失败（可能空间不足）`:''),3500);busy=false;view==='me'?drawMe():showFeed(P,null,false)}
+
+/* ---------- 查重 ---------- */
+var DUP=null,DUPB=false;const CHK=6*1048576;
+async function fpOf(size,rd){const S=262144,ps=[new Uint8Array(await rd(0,Math.min(S,size)))];
+ if(size>S*2){const m=Math.floor(size/2);ps.push(new Uint8Array(await rd(m-S/2,m+S/2)))}
+ if(size>S)ps.push(new Uint8Array(await rd(Math.max(S,size-S),size)));
+ const hd=enc.encode(size+':'),buf=new Uint8Array(hd.length+ps.reduce((a,b)=>a+b.length,0));buf.set(hd);let o=hd.length;for(const p of ps){buf.set(p,o);o+=p.length}
+ return [...new Uint8Array(await crypto.subtle.digest('SHA-256',buf))].map(b=>b.toString(16).padStart(2,'0')).join('')}
+async function ensureFp(p){if(p.fp)return;let size,rd;
+ if(!p.nc){const b=await tx('blobs','readonly',st=>st.get(p.id));if(!b)return;const buf=await open(b.iv,b.data);size=buf.byteLength;rd=async(a,e)=>buf.slice(a,e)}
+ else{const lb=await tx('blobs','readonly',st=>st.get(p.id+'#'+(p.nc-1)));if(!lb)return;const last=await open(lb.iv,lb.data);size=(p.nc-1)*CHK+last.byteLength;let ck=-1,cb=null;
+  const chunk=async k=>{if(k===p.nc-1)return last;if(k!==ck){const b=await tx('blobs','readonly',st=>st.get(p.id+'#'+k));cb=await open(b.iv,b.data);ck=k}return cb};
+  rd=async(a,e)=>{const out=new Uint8Array(e-a);let o=0;for(let k=Math.floor(a/CHK);k<=Math.floor((e-1)/CHK);k++){const c=new Uint8Array(await chunk(k)),s=Math.max(a,k*CHK)-k*CHK,t=Math.min(e,(k+1)*CHK)-k*CHK;out.set(c.subarray(s,t),o);o+=t-s}return out.buffer}}
+ p.fp=await fpOf(size,rd);const r=await tx('posts','readonly',st=>st.get(p.id));if(r){const m=await openJ(r.iv,r.data);m.fp=p.fp;const q=await sealJ(m);r.iv=q.iv;r.data=q.data;await tx('posts','readwrite',st=>st.put(r))}}
+const pc=x=>{x=x-((x>>>1)&0x55555555);x=(x&0x33333333)+((x>>>2)&0x33333333);return Math.imul((x+(x>>>4))&0x0F0F0F0F,0x01010101)>>>24};
+async function dh(url){const i=new Image();i.src=url;await i.decode();const c=document.createElement('canvas');c.width=9;c.height=8;const g=c.getContext('2d');g.drawImage(i,0,0,9,8);const d=g.getImageData(0,0,9,8).data;let a=0,b=0,n=0;
+ for(let y=0;y<8;y++)for(let x=0;x<8;x++){const k=(y*9+x)*4,l=k+4,bit=(d[k]*.3+d[k+1]*.59+d[k+2]*.11)>(d[l]*.3+d[l+1]*.59+d[l+2]*.11)?1:0;n+=bit;if(y<4)a=((a<<1)|bit)>>>0;else b=((b<<1)|bit)>>>0}
+ return n<6||n>58?null:[a,b]}
+async function scanDup(){if(DUPB||!key)return;DUPB=true;busy=true;let n=0;const T=P.filter(p=>!p.fp).length;
+ try{for(const p of P)if(!p.fp){toast(`分析文件 ${++n}/${T}`,0);try{await ensureFp(p)}catch(e){}await new Promise(r=>setTimeout(r))}
+  toast('比对画面…',0);for(const p of P)if(p.th&&!p.dh&&p.dh!==null){try{p.dh=await dh(p.th)}catch(e){p.dh=null}}
+  const ex=new Map(),groups=[],skip=new Set(),byO=(a,b)=>(a._o||0)-(b._o||0);
+  for(const p of P)if(p.fp){if(!ex.has(p.fp))ex.set(p.fp,[]);ex.get(p.fp).push(p)}
+  for(const L of ex.values())if(L.length>1){L.sort(byO);groups.push({k:'same',ids:L.map(p=>p.id)});L.slice(1).forEach(p=>skip.add(p.id))}
+  const R=P.filter(p=>p.dh&&!skip.has(p.id)),par=R.map((_,i)=>i),fd=i=>par[i]===i?i:(par[i]=fd(par[i]));
+  for(let i=0;i<R.length;i++)for(let j=i+1;j<R.length;j++){if(R[i].v!==R[j].v)continue;const a=R[i].dh,b=R[j].dh;if(pc((a[0]^b[0])>>>0)+pc((a[1]^b[1])>>>0)<=5)par[fd(i)]=fd(j)}
+  const cl=new Map();R.forEach((p,i)=>{const r=fd(i);if(!cl.has(r))cl.set(r,[]);cl.get(r).push(p)});
+  for(const L of cl.values())if(L.length>1){L.sort(byO);groups.push({k:'sim',ids:L.map(p=>p.id)})}
+  DUP={groups};toast('检测完成',1500)}catch(e){toast('检测中断，请重试',2500)}
+ busy=false;DUPB=false;if(view==='me')drawMe()}
+function prune(){if(!DUP)return;DUP.groups.forEach(g=>g.ids=g.ids.filter(i=>P.some(p=>p.id===i)));DUP.groups=DUP.groups.filter(g=>g.ids.length>1)}
+async function keepOne(gr){const L=gr.ids.map(i=>P.find(p=>p.id===i)).filter(Boolean).sort((a,b)=>(a._o||0)-(b._o||0)),k=L[0];if(!k)return;const del=L.slice(1).map(p=>p.id);
+ FD.f.forEach(f=>{if(del.some(d=>f.ids.includes(d))&&!f.ids.includes(k.id))f.ids.push(k.id)});await delPosts(del);prune()}
+const el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e};
+function grp(gr){const gp=el('div','gp'),rw=el('div','rw'),L=gr.ids.map(i=>P.find(p=>p.id===i)).filter(Boolean);
+ for(const p of L){const it=el('div','it');if(p.th)it.style.backgroundImage=`url(${p.th})`;it.onclick=()=>showFeed(L,p.id,true);
+  const x=el('b');x.textContent='✕';x.onclick=async e=>{e.stopPropagation();if(!confirm('删除这个作品？不可恢复。'))return;await delPosts([p.id]);prune();drawMe()};it.append(x);
+  if(p.v){const i=el('i');i.textContent='▶';it.append(i)}rw.append(it)}
+ const ac=el('div','ac'),s=el('span'),b=el('button');s.textContent=`${L.length} 个 · 点缩略图预览`;b.textContent='保留最早的，删除其余';
+ b.onclick=async()=>{if(!confirm(`删除其余 ${L.length-1} 个？评论和弹幕会一并删除，收藏会转移给保留的作品。`))return;await keepOne(gr);drawMe()};ac.append(s,b);gp.append(rw,ac);return gp}
+function drawDup(g){g.className='';const box=el('div','dup');g.append(box);
+ if(P.length<2){box.innerHTML='<div class="nil">作品少于 2 个，无需查重</div>';return}
+ if(!DUP){const n=el('div','nil');n.innerHTML='检测库里重复上传的作品<br><small>完全相同：文件内容一致<br>疑似重复：画面几乎一样（如转码、压缩后的副本）<br>第一次检测会分析全部旧作品，数量多时需要几分钟</small>';const b=el('button','gold big');b.textContent='开始检测';b.onclick=scanDup;box.append(n,b);return}
+ const ex=DUP.groups.filter(x=>x.k==='same'),sm2=DUP.groups.filter(x=>x.k==='sim'),top=el('div','nil');
+ top.innerHTML=DUP.groups.length?`发现 <b>${ex.length}</b> 组完全相同 · <b>${sm2.length}</b> 组疑似重复`:'没有发现重复作品 ✓';box.append(top);
+ if(ex.length){const b=el('button','gold big');b.textContent='一键清理完全相同的重复（每组保留最早的）';
+  b.onclick=async()=>{const n=ex.reduce((a,x)=>a+x.ids.length-1,0);if(!confirm(`将删除 ${n} 个完全相同的重复作品，每组保留最早导入的一个。其评论和弹幕会一并删除，收藏会转移给保留的作品。`))return;busy=true;for(const x of ex)await keepOne(x);busy=false;drawMe();toast('已清理')};box.append(b)}
+ for(const [t,L] of [['完全相同',ex],['疑似重复',sm2]]){if(!L.length)continue;const h3=el('h3');h3.textContent=t;box.append(h3);for(const gr of L)box.append(grp(gr))}
+ const rb=el('button','gold big');rb.textContent='重新检测';rb.style.opacity='.75';rb.onclick=scanDup;box.append(rb)}
 
 /* ---------- 视图 ---------- */
 function go(v){view=v;$('#feedv').hidden=v!=='feed';$('#me').hidden=v!=='me';$('#dmf').hidden=v!=='feed';$('#imp').hidden=v!=='me'||sm;$('#rnd').hidden=$('#aut').hidden=$('#imm').hidden=v!=='feed';if(imm&&v!=='feed')setImm(false);
@@ -235,8 +289,9 @@ $('#tM').onclick=()=>{go('me')};$('#bk').onclick=()=>go('me');
 
 /* ---------- 个人主页 ---------- */
 function curList(){if(tab==='w')return P;const f=FD.f.find(x=>x.id===fold);return f?f.ids.map(id=>P.find(p=>p.id===id)).filter(Boolean):[]}
-function drawMe(){$('#n1').textContent=P.length;$('#n2').textContent=FD.f.length;$('#t1').classList.toggle('on',tab==='w');$('#t2').classList.toggle('on',tab!=='w');
- const g=$('#grid'),inF=tab==='f'&&fold;$('#sub').hidden=!inF;$('#bsel').hidden=tab==='f'&&!fold;$('#bsel').textContent=sm?'完成':'选择';$('#me').classList.toggle('sm',sm);$('#sel').hidden=!sm;$('#imp').hidden=sm;g.innerHTML='';selUI();
+function drawMe(){$('#n1').textContent=P.length;$('#n2').textContent=FD.f.length;$('#t1').classList.toggle('on',tab==='w');$('#t2').classList.toggle('on',tab==='f');$('#t3').classList.toggle('on',tab==='d');
+ const g=$('#grid'),inF=tab==='f'&&fold;$('#sub').hidden=!inF;$('#bsel').hidden=tab==='d'||(tab==='f'&&!fold);$('#bsel').textContent=sm?'完成':'选择';$('#me').classList.toggle('sm',sm);$('#sel').hidden=!sm;$('#imp').hidden=sm;g.innerHTML='';selUI();
+ if(tab==='d'){drawDup(g);return}
  if(tab==='w'||inF){if(inF)$('#sn').textContent=FD.f.find(x=>x.id===fold).n;grid(g,curList())}
  else{g.className='fl';for(const f of FD.f){const c=document.createElement('div');c.className='fc';const fp=P.find(p=>p.id===f.ids[0]);c.innerHTML='<div class="cv"></div><div class="t"><b></b><small>'+f.ids.length+' 个作品</small></div>';if(fp&&fp.th)c.firstChild.style.backgroundImage=`url(${fp.th})`;else c.firstChild.textContent='☆';c.querySelector('b').textContent=f.n;c.onclick=()=>{fold=f.id;S.clear();drawMe()};g.append(c)}
   const c=document.createElement('div');c.className='fc';c.innerHTML='<div class="cv">＋</div><div class="t"><b>新建收藏夹</b></div>';c.onclick=()=>sh('新建收藏夹',()=>{},'收藏夹名称',async t=>{FD.f.push({id:crypto.randomUUID(),n:t,ids:[]});await saveFD();closeSheet();drawMe()});g.prepend(c)}}
@@ -245,7 +300,7 @@ function grid(g,list){g.className='gr';if(!list.length){g.className='';g.innerHT
   c.onclick=()=>{if(skip)return;sm?tog(c):showFeed(list,p.id,true)};g.append(c)}}
 function tog(c,f){const id=c.dataset.id,on=f===undefined?!S.has(id):f;on?S.add(id):S.delete(id);c.classList.toggle('on',on);selUI()}
 function selUI(){$('#sc').textContent=S.size}
-$('#t1').onclick=()=>{tab='w';fold=null;S.clear();drawMe()};$('#t2').onclick=()=>{tab='f';fold=null;sm=false;S.clear();drawMe()};
+$('#t1').onclick=()=>{tab='w';fold=null;S.clear();drawMe()};$('#t2').onclick=()=>{tab='f';fold=null;sm=false;S.clear();drawMe()};$('#t3').onclick=()=>{tab='d';fold=null;sm=false;S.clear();drawMe()};
 $('#sbk').onclick=()=>{fold=null;sm=false;S.clear();drawMe()};
 $('#sdel').onclick=async()=>{const f=FD.f.find(x=>x.id===fold);if(f&&confirm(`删除收藏夹“${f.n}”？里面的作品不会被删除。`)){FD.f=FD.f.filter(x=>x!==f);fold=null;await saveFD();drawMe()}};
 $('#bsel').onclick=()=>{sm=!sm;S.clear();drawMe()};$('#scan').onclick=$('#bsel').onclick;
