@@ -69,14 +69,13 @@ input::placeholder{color:#fff7}
 .fc{display:flex;align-items:center;gap:14px;padding:9px 16px;border-bottom:1px solid #ffffff10}.fc::after{content:'›';color:#fff5;font-size:24px}.fc .t{flex:1;min-width:0}.fc .cv{width:54px;height:54px;flex:none;border-radius:12px;background:#15141d center/cover;border:1px solid #ffffff18;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--g)}
 .fc b{display:block;font-weight:500;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fc small{color:#fff7;display:block;margin-top:3px}#snd{position:fixed;left:50%;top:calc(var(--sf) + 58px);transform:translateX(-50%);z-index:6;background:#000b;border:1px solid var(--g);color:var(--g);padding:8px 16px;border-radius:20px;font-size:14px}
 .nil{color:#fff7;text-align:center;padding:60px 20px;line-height:1.9}
-#lock{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 50% 26%,#1d1733,#07070b 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:48px 40px calc(10vh + env(safe-area-inset-bottom))}
-#lock img{width:min(300px,74vw);margin-bottom:44px}
-#lock form{display:flex;flex-direction:column;gap:18px;width:min(360px,100%)}
-#lock input{flex:none;height:58px;border-radius:29px;text-align:center;font-size:17px;letter-spacing:2px;background:#ffffff17;border:1px solid #ffffff1a}
-#lock input:focus{border-color:var(--g)}
-#lock .gold{flex:none;height:58px;border-radius:29px;font-size:17px;letter-spacing:3px;margin-top:10px}
-#fb{color:var(--g);padding:16px;margin-top:18px;font-size:15px;letter-spacing:1px}
-#msg{color:#ff8a8a;min-height:22px;font-size:14px;margin-top:10px}
+#lock{position:fixed;inset:0;z-index:50;background:#050507;overflow:hidden}
+#lock svg{position:absolute;inset:0;width:100%;height:100%}
+#mig{position:absolute;inset:0;z-index:2;background:#050507f2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px}
+#mig p{color:#fffb;text-align:center;line-height:1.8;font-size:14px}
+#mig input{flex:none;height:58px;width:min(340px,100%);border-radius:29px;text-align:center;font-size:17px;background:#ffffff17}
+#mig .gold{flex:none;height:58px;width:min(340px,100%);border-radius:29px;font-size:17px}
+#msg{color:#ff8a8a;min-height:20px;font-size:14px}
 #sheet{position:fixed;inset:0;z-index:20;visibility:hidden;transition:visibility .3s}#sheet.on{visibility:visible}
 .bk{position:absolute;inset:0;background:#0008;opacity:0;transition:opacity .3s}#sheet.on .bk{opacity:1}
 .pn{position:absolute;left:0;right:0;bottom:var(--kb,0px);max-height:72dvh;min-height:30dvh;background:#17161f;border-radius:20px 20px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom)}
@@ -123,7 +122,7 @@ html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail
 </div>
 <div id="sheet"><div class="bk"></div><div class="pn"><div class="hd"><span id="sct"></span><button id="sx">✕</button></div><div id="cl"></div>
  <form id="cf" hidden><input id="ci" type="text" maxlength="500" autocomplete="off"><button class="gold">确定</button></form></div></div>
-<div id="lock"><img id="lg" alt=""><form id="lf"><input id="pw" type="password" placeholder="密码" autocomplete="current-password"><input id="pw2" type="password" placeholder="再输入一次密码" hidden><button class="gold" id="lb">解锁</button></form><button id="fb" hidden>轻触屏幕任意位置，用面容 ID 解锁</button><div id="msg"></div></div>
+<div id="lock"><div id="mig" hidden><p>已取消密码。<br>升级后首次进入需要输入一次旧密码，之后不再需要。</p><form id="lf" style="display:contents"><input id="pw" type="password" placeholder="旧密码" autocomplete="current-password"><button class="gold">确定</button></form><div id="msg"></div><button id="mx" style="color:#fff8;padding:10px">返回</button></div></div>
 <input id="fi" type="file" accept="image/*,video/*" multiple hidden>
 <input id="fd" type="file" webkitdirectory multiple hidden>
 <input id="ff" type="file" multiple hidden>
@@ -136,7 +135,7 @@ const S=new Set(),P=[];let FD={f:[]};
 /* ---------- Logo ---------- */
 const LOGO=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 250"><defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="240" y2="250"><stop offset="0" stop-color="#f7e6b8"/><stop offset="1" stop-color="#c08f52"/></linearGradient><mask id="m"><rect width="240" height="250" fill="#fff"/><circle cx="152" cy="92" r="33" fill="#000"/></mask></defs><circle cx="120" cy="112" r="98" fill="none" stroke="url(#g)" stroke-width="1.6" opacity=".75"/><circle cx="120" cy="112" r="92" fill="none" stroke="url(#g)" stroke-width=".6" opacity=".5"/><circle cx="100" cy="116" r="30" fill="url(#g)"/><circle cx="136" cy="102" r="38" fill="#e8eaf4" mask="url(#m)"/><g fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round"><path d="M120 188C118 173 110 164 99 158"/><path d="M120 188C122 171 130 161 141 155"/><path d="M120 188V158"/></g><text x="120" y="238" text-anchor="middle" font-family="Didot,'Bodoni 72',Georgia,serif" font-size="15" letter-spacing="6" fill="#d9b779">SUN MOON GRASS</text></svg>`;
 const LU='data:image/svg+xml,'+encodeURIComponent(LOGO);
-$('#lg').src=LU;$('#av').style.setProperty('--lu',`url("${LU}")`);
+$('#av').style.setProperty('--lu',`url("${LU}")`);
 {const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=c.height=180;const g=c.getContext('2d');g.fillStyle='#07070b';g.fillRect(0,0,180,180);g.drawImage(i,15,10,150,156);$('#ico').href=c.toDataURL()};i.src=LU}
 
 /* ---------- 存储 ---------- */
@@ -152,31 +151,63 @@ const open=(iv,data)=>crypto.subtle.decrypt({name:'AES-GCM',iv},key,data);
 const sealJ=o=>seal(enc.encode(JSON.stringify(o))),openJ=async(iv,d)=>JSON.parse(dec.decode(await open(iv,d)));
 const saveFD=async()=>kvPut('fav',await sealJ(FD));
 
-/* ---------- 解锁 / 面容ID ---------- */
+/* ---------- 入口页 / 状态保留 ---------- */
 const msg=t=>$('#msg').textContent=t;
-const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))),ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-var fidReady=false;$('#lock').addEventListener('click',e=>{if(fidReady&&!e.target.closest('input,#lb'))fidUse(false)});
-async function initLock(){const first=!(await kvGet('salt')),fid=!first&&!!(await kvGet('fid'));$('#pw2').hidden=!first;$('#lb').textContent=first?'设置密码并进入':'解锁';$('#fb').hidden=!fid;fidReady=fid;if(fid)fidUse(true)}
-async function enter(){$('#pw').value=$('#pw2').value='';msg('');$('#lock').hidden=true;await loadAll();showFeed(P,null,false);scanDark()}
+var pend=null,lastMeY=0,entering=false,hidAt=0;
+async function tryKey(){const raw=await kvGet('fk');if(!raw)return false;try{key=await crypto.subtle.importKey('raw',raw,'AES-GCM',true,['encrypt','decrypt']);const c=await kvGet('chk');if(c)await open(c.iv,c.data);return true}catch(e){key=null;return false}}
+async function gateEnter(){if(entering)return;entering=true;
+ try{if(await tryKey()){await enter();return}
+  if(await kvGet('salt')){$('#mig').hidden=false;$('#pw').focus();return}
+  key=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt','decrypt']);await kvPut('fk',await crypto.subtle.exportKey('raw',key));await kvPut('chk',await seal(enc.encode('ok')));await enter()}
+ finally{entering=false}}
 $('#lf').onsubmit=async e=>{e.preventDefault();const pw=$('#pw').value;if(!pw)return;msg('');
- try{const salt0=await kvGet('salt');
-  if(!salt0){if(pw.length<6)return msg('密码至少 6 位');if(pw!==$('#pw2').value)return msg('两次输入不一致');
-   const salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(pw,salt);await kvPut('salt',salt);await kvPut('chk',await seal(enc.encode('ok')))}
-  else{key=await derive(pw,salt0);const c=await kvGet('chk');await open(c.iv,c.data)}
- }catch(err){key=null;return msg('密码错误')}
- enter()};
-async function fidUse(silent){try{const id=await kvGet('fid');if(!id)return;
- await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:ub(id)}],userVerification:'required',timeout:60000}});
- key=await crypto.subtle.importKey('raw',await kvGet('fk'),'AES-GCM',true,['encrypt','decrypt']);const c=await kvGet('chk');await open(c.iv,c.data);enter()}
- catch(e){key=null;if(!silent)msg('面容 ID 未通过，请输入密码')}}
-async function fidOn(){try{const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'日月草的后宫'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'me',displayName:'me'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});
- await kvPut('fid',b64(c.rawId));await kvPut('fk',await crypto.subtle.exportKey('raw',key));toast('面容 ID 已开启')}catch(e){toast('开启失败：请用主屏幕图标打开，并在系统设置允许面容 ID',3000)}}
-$('#cfg').onclick=async()=>{const on=!!(await kvGet('fid'));sh('设置',l=>{const p=document.createElement('p');p.innerHTML=`<span>面容 ID 解锁</span><em>${on?'已开启 · 点此关闭':'点此开启'}</em>`;p.onclick=async()=>{if(on){await kvPut('fid',null);await kvPut('fk',null);toast('已关闭')}else await fidOn();closeSheet()};
- const t=document.createElement('p');t.className='tip';t.textContent='面容 ID 只是快捷入口，密码仍然有效。忘记密码且未开启面容 ID 时数据无法恢复。';const q=document.createElement('p'),nb=P.filter(z=>!z.th||z.bad).length;q.innerHTML='<span>修复缩略图<small>重新生成黑色或缺失的封面</small></span><em>'+(nb?nb+' 个待修复 ›':'全部正常')+'</em>';q.onclick=()=>{closeSheet();regen()};l.append(p,q,t)})};
-function lock(){imm&&setImm(false);DUP=null;key=null;cancelAnimationFrame(raf);secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;S.clear();sm=false;closeSheet();$('#feedv').hidden=$('#me').hidden=true;view='';$('#lock').hidden=false;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);initLock()}
-$('#lk').onclick=lock;
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(key&&!picking&&!busy)lock()}else setTimeout(()=>picking=false,1500)});
-addEventListener('pagehide',()=>{if(key&&!busy)lock()});
+ try{const salt=await kvGet('salt');key=await derive(pw,salt);const c=await kvGet('chk');await open(c.iv,c.data);await kvPut('fk',await crypto.subtle.exportKey('raw',key));$('#pw').value='';await enter()}catch(err){key=null;msg('密码错误')}};
+$('#mx').onclick=()=>{$('#mig').hidden=true;$('#pw').value='';msg('')};
+async function enter(st){$('#lock').hidden=true;$('#mig').hidden=true;msg('');await loadAll();
+ if(st){try{restore(st)}catch(e){showFeed(P,null,false)}}else showFeed(P,null,false);scanDark()}
+function restore(st){rnd=!!st.rnd;aut=!!st.aut;dmOn=st.dmOn!==false;tgSync();tab=st.tab||'w';fold=FD.f.some(f=>f.id===st.fold)?st.fold:null;if(tab==='f'&&!fold&&st.fold)tab='f';
+ const by=id=>P.find(p=>p.id===id);
+ if(st.view==='feed'){const L=(st.fl||[]).map(by).filter(Boolean),base=st.fb==='home'?P:(st.fb||[]).map(by).filter(Boolean);
+  if(!L.length)return showFeed(P,null,false);pend=st.cur?{id:st.cur,t:st.vt||0}:null;showFeed(base.length?base:L,st.cur,st.fromMe,L);if(st.imm)setTimeout(()=>{if(view==='feed')setImm(true)},400)}
+ else{lastMeY=st.meY||0;go('me')}}
+function saveState(){if(!key||!view)return;try{const s=secs[cur],st={ts:Date.now(),view,fromMe,tab,fold,imm,dmOn,rnd,aut,meY:view==='me'?$('#me').scrollTop:lastMeY};
+ if(view==='feed'){st.fl=secs.map(z=>z.x.pid);st.fb=FB===P?'home':FB.map(p=>p.id);st.cur=s?s.x.pid:null;st.vt=s&&s.x.v&&s.x.media?s.x.media.currentTime:0}
+ localStorage.st=JSON.stringify(st)}catch(e){}}
+const clearState=()=>{try{localStorage.removeItem('st')}catch(e){}};
+setInterval(()=>{if(!document.hidden)saveState()},3000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden){hidAt=Date.now();saveState()}
+ else{if(view&&hidAt&&Date.now()-hidAt>600000&&!busy&&!picking){clearState();location.reload();return}hidAt=0;const s=secs[cur];if(view==='feed'&&s&&s.x.v&&s.x.media&&s.x.pl)s.x.media.play().catch(()=>{});setTimeout(()=>picking=false,1500)}});
+addEventListener('pagehide',saveState);
+function toGate(){imm&&setImm(false);closeSheet();secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;S.clear();sm=false;DUP=null;$('#feedv').hidden=$('#me').hidden=true;view='';clearState();$('#lock').hidden=false}
+$('#lk').onclick=toGate;
+$('#cfg').onclick=()=>sh('设置',l=>{const q=el('p'),nb=P.filter(z=>!z.th||z.bad).length;q.innerHTML='<span>修复缩略图<small>重新生成黑色或缺失的封面</small></span><em>'+(nb?nb+' 个待修复 ›':'全部正常')+'</em>';q.onclick=()=>{closeSheet();regen()};l.append(q)});
+function gateSVG(){let ry='',sp='';
+ for(let i=0;i<24;i++){const a=i*Math.PI/12,L=i%2?122:142,w=.075,p=(r,d)=>(150+r*Math.cos(a+d)).toFixed(1)+','+(236+r*Math.sin(a+d)).toFixed(1);ry+=`<path d="M${p(106,-w)}L${p(L,0)}L${p(106,w)}Z"/>`}
+ [[44,120,2.2],[340,96,1.8],[60,520,1.6],[330,470,2.4],[300,650,1.6],[84,664,1.8]].forEach(([x,y,r])=>sp+=`<circle cx="${x}" cy="${y}" r="${r}"/>`);
+ return `<svg viewBox="0 0 390 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs>
+<linearGradient id="gd" gradientUnits="userSpaceOnUse" x1="40" y1="90" x2="340" y2="620"><stop offset="0" stop-color="#fbeec6"/><stop offset=".55" stop-color="#d9b779"/><stop offset="1" stop-color="#9c6f3a"/></linearGradient>
+<linearGradient id="sv" gradientUnits="userSpaceOnUse" x1="180" y1="230" x2="350" y2="410"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#b9bfd0"/><stop offset="1" stop-color="#7c8294"/></linearGradient>
+<radialGradient id="bg" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="#17161d"/><stop offset="1" stop-color="#050507"/></radialGradient>
+<filter id="rl" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+<feGaussianBlur in="SourceAlpha" stdDeviation="2" result="bl"/>
+<feSpecularLighting in="bl" surfaceScale="5" specularConstant="1.4" specularExponent="20" lighting-color="#fff4d6" result="sp"><feDistantLight azimuth="225" elevation="50"/></feSpecularLighting>
+<feComposite in="sp" in2="SourceAlpha" operator="in" result="sc"/>
+<feDiffuseLighting in="bl" surfaceScale="5" diffuseConstant="1.3" lighting-color="#fff" result="df"><feDistantLight azimuth="225" elevation="50"/></feDiffuseLighting>
+<feComposite in="SourceGraphic" in2="df" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="lit"/>
+<feComposite in="lit" in2="sc" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="out"/>
+<feOffset in="SourceAlpha" dx="3" dy="6" result="o"/><feGaussianBlur in="o" stdDeviation="5" result="ob"/>
+<feFlood flood-color="#000" flood-opacity=".95"/><feComposite in2="ob" operator="in" result="sh"/>
+<feMerge><feMergeNode in="sh"/><feMergeNode in="out"/></feMerge></filter></defs>
+<rect width="390" height="760" fill="url(#bg)"/>
+<rect x="22" y="36" width="346" height="688" rx="36" fill="none" stroke="#2b2934" stroke-width="1.5"/><rect x="30" y="44" width="330" height="672" rx="30" fill="none" stroke="#0a0a0d" stroke-width="3"/>
+<g fill="url(#gd)" filter="url(#rl)">${ry}<circle cx="150" cy="236" r="94" fill="none" stroke="url(#gd)" stroke-width="4"/><circle cx="150" cy="236" r="70"/>${sp}</g>
+<circle cx="150" cy="236" r="48" fill="none" stroke="#0000005c" stroke-width="3"/><circle cx="150" cy="236" r="30" fill="none" stroke="#ffffff22" stroke-width="1.5"/>
+<g fill="url(#sv)" filter="url(#rl)"><path d="M250.45 230.76A88 88 0 1 0 346.7 341.8A74 74 0 1 1 250.45 230.76Z"/></g>
+<g fill="none" stroke="url(#gd)" stroke-width="4.5" stroke-linecap="round" filter="url(#rl)"><path d="M70 606Q195 582 320 606" stroke-width="2.5"/><path d="M195 590C192 570 184 554 170 542"/><path d="M195 590C196 568 198 550 205 532"/><path d="M195 590C200 572 212 558 228 550"/><path d="M195 590C188 576 178 570 164 568"/><path d="M195 590C206 580 218 578 232 580"/></g>
+<circle id="hit" cx="197" cy="568" r="46" fill="transparent" style="cursor:pointer"/></svg>`}
+$('#lock').insertAdjacentHTML('afterbegin',gateSVG());$('#hit').addEventListener('click',gateEnter);
+(async()=>{let st=null;try{st=JSON.parse(localStorage.st||'null')}catch(e){}
+ if(st&&Date.now()-st.ts<600000&&await tryKey()){$('#lock').hidden=true;await enter(st)}else clearState()})();
 
 /* ---------- 工具 ---------- */
 function toast(t,ms=1800){let e=$('#toast');if(!e){e=document.createElement('div');e.id='toast';document.body.append(e)}e.textContent=t;clearTimeout(tt);if(ms)tt=setTimeout(()=>e.remove(),ms)}
@@ -189,7 +220,7 @@ $('#sx').onclick=$('.bk').onclick=closeSheet;
 $('#cf').onsubmit=async e=>{e.preventDefault();const t=$('#ci').value.trim();if(t&&onSub){$('#ci').value='';await onSub(t)}};
 
 /* ---------- 载入 ---------- */
-async function loadAll(){P.length=0;const ps=await tx('posts','readonly',s=>s.getAll());ps.sort((a,b)=>b.ord-a.ord);
+async function loadAll(){P.forEach(p=>p.th&&URL.revokeObjectURL(p.th));P.length=0;const ps=await tx('posts','readonly',s=>s.getAll());ps.sort((a,b)=>b.ord-a.ord);
  for(const p of ps){const m=await openJ(p.iv,p.data);P.push({id:p.id,v:m.t.startsWith('video'),mime:m.t,nc:m.nc,fp:m.fp,_o:p.ord,th:p.td?URL.createObjectURL(new Blob([await open(p.ti,p.td)],{type:'image/jpeg'})):null})}
  const f=await kvGet('fav');FD=f?await openJ(f.iv,f.data):{f:[{id:'d',n:'我的收藏',ids:[]}]}}
 
@@ -281,11 +312,11 @@ function drawDup(g){g.className='';const box=el('div','dup');g.append(box);
  const rb=el('button','gold big');rb.textContent='重新检测';rb.style.opacity='.75';rb.onclick=scanDup;box.append(rb)}
 
 /* ---------- 视图 ---------- */
-function go(v){view=v;$('#feedv').hidden=v!=='feed';$('#me').hidden=v!=='me';$('#dmf').hidden=v!=='feed';$('#imp').hidden=v!=='me'||sm;$('#rnd').hidden=$('#aut').hidden=$('#imm').hidden=v!=='feed';if(imm&&v!=='feed')setImm(false);
+function go(v){if(view==='me'&&v!=='me')lastMeY=$('#me').scrollTop;view=v;$('#feedv').hidden=v!=='feed';$('#me').hidden=v!=='me';$('#dmf').hidden=v!=='feed';$('#imp').hidden=v!=='me'||sm;$('#rnd').hidden=$('#aut').hidden=$('#imm').hidden=v!=='feed';if(imm&&v!=='feed')setImm(false);
  $('#bk').hidden=!(v==='feed'&&fromMe);$('#ttl').hidden=v==='feed'&&fromMe;$('#tH').classList.toggle('on',v==='feed'&&!fromMe);$('#tM').classList.toggle('on',v==='me'||fromMe);$('#sel').hidden=!(sm&&v==='me');
- if(v!=='feed'){secs.forEach(unload);cur=-1}if(v==='me')drawMe()}
+ if(v!=='feed'){secs.forEach(unload);cur=-1}if(v==='me'){drawMe();const y=lastMeY;requestAnimationFrame(()=>{$('#me').scrollTop=y})}}
 $('#tH').onclick=()=>{if(view==='feed'&&!fromMe&&secs.length)return;sm=false;showFeed(P,null,false)};
-$('#tM').onclick=()=>{go('me')};$('#bk').onclick=()=>go('me');
+$('#tM').onclick=()=>{lastMeY=0;go('me')};$('#bk').onclick=()=>go('me');
 
 /* ---------- 个人主页 ---------- */
 function curList(){if(tab==='w')return P;const f=FD.f.find(x=>x.id===fold);return f?f.ids.map(id=>P.find(p=>p.id===id)).filter(Boolean):[]}
@@ -335,7 +366,7 @@ let ua=0;function unlockAudio(){if(unl||ua>=3)return;ua++;VP.forEach(v=>{v.src=S
 async function readBlob(x){const parts=[];if(!x.nc){const b=await tx('blobs','readonly',st=>st.get(x.pid));if(!b)return null;parts.push(await open(b.iv,b.data))}
  else for(let k=0;k<x.nc;k++){const b=await tx('blobs','readonly',st=>st.get(x.pid+'#'+k));if(!b)return null;parts.push(await open(b.iv,b.data));await new Promise(r=>setTimeout(r))}return new Blob(parts,{type:x.mime})}
 const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting)activate(secs.indexOf(e.target))},{threshold:.6});
-function showFeed(list,startId,mine){FB=list;const L=rnd?shuf(list,startId):list;fromMe=!!mine;go('feed');io.disconnect();secs.forEach(unload);const feed=$('#feed');feed.innerHTML='';secs=[];cur=-1;$('#empty').hidden=list.length>0;
+function showFeed(list,startId,mine,order){FB=list;const L=order||(rnd?shuf(list,startId):list);fromMe=!!mine;go('feed');io.disconnect();secs.forEach(unload);const feed=$('#feed');feed.innerHTML='';secs=[];cur=-1;$('#empty').hidden=list.length>0;
  for(const p of L){const s=document.createElement('section');s.innerHTML='<div class="dml"></div>';s.x={pid:p.id,v:p.v,mime:p.mime,nc:p.nc,dm:[],cm:[],g:0,t0:0,last:-1,lane:-1,p:null,media:null,url:null};feed.append(s);secs.push(s)}
  feed.scrollTop=Math.max(0,L.findIndex(p=>p.id===startId))*feed.clientHeight;secs.forEach(s=>io.observe(s));upd()}
 function activate(i){if(i<0||i===cur)return;if(secs[cur])pause(secs[cur]);cur=i;secs.forEach((s,j)=>{if(j===i)load(s);else if(Math.abs(j-i)>1)unload(s)});const s=secs[i];load(s).then(()=>{if(cur===i){play(s);setTimeout(()=>{if(cur===i&&secs[i+1])load(secs[i+1])},1500)}});upd()}
@@ -348,7 +379,7 @@ async function lazyTh(s,tries=0){const x=s.x,p=P.find(q=>q.id===x.pid),el=x.medi
  const ab=await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72)),t=await seal(ab),r=await tx('posts','readonly',st=>st.get(x.pid));if(!r)return;
  r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th&&URL.revokeObjectURL(p.th);p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}));p.bad=false}catch(e){}}
 function unload(s){const x=s.x;x.g++;x.p=null;if(x.media){const m=x.media;if(x.v)m.pause();m.removeAttribute('src');if(x.v){m.load();m.onclick=null;m.onended=null;VP.push(m)}m.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
-function play(s){const x=s.x;if(!x.media)return;x.t0=performance.now();x.last=-1;x.i=0;x.dirty=false;x.adv=false;if(x.v)x.media.loop=!aut;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
+function play(s){const x=s.x;if(!x.media)return;const t0=(pend&&pend.id===x.pid)?pend.t:0;if(t0)pend=null;x.t0=performance.now();x.last=t0>0?t0:-1;x.i=0;x.dirty=false;x.adv=false;if(x.v)x.media.loop=!aut;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=t0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
 function pause(s){const x=s.x;if(x.v&&x.media)x.media.pause();s.querySelector('.dml').innerHTML=''}
 const isFav=id=>FD.f.some(f=>f.ids.includes(id));
 function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd').classList.toggle('off',!dmOn);const f=s&&isFav(s.x.pid);$('#fv').classList.toggle('on',!!f);$('#fv i').textContent=f?'★':'☆'}
@@ -360,7 +391,7 @@ function spawn(s,d,mine){if(!dmOn)return;const e=document.createElement('span');
 const pgE=$('#pg'),sndE=$('#snd');let _ph,_sh,_pp=-1;
 function tick(){raf=requestAnimationFrame(tick);const s=secs[cur],m=s&&s.x.media,vv=!!(m&&s.x.v);
  if(_ph!==!vv){_ph=!vv;pgE.hidden=!vv}const sh=!(vv&&m.muted);if(_sh!==sh){_sh=sh;sndE.hidden=sh}
- if(!s||!m)return;const x=s.x,c=clock(s);
+ if(!s||!m)return;const x=s.x,c=clock(s);if(x.v)x.pl=!m.paused;
  if(aut&&!x.v&&!x.dirty&&!x.adv&&performance.now()-x.t0>6000){x.adv=true;next()}
  if(c<x.last){x.last=-1;x.i=0}
  if(!pgD){let i=x.i||0;while(i<x.dm.length&&x.dm[i].t<=c){if(x.dm[i].t>x.last)spawn(s,x.dm[i]);i++}x.i=i}
@@ -400,5 +431,5 @@ $('#snd').onclick=()=>{const s=secs[cur];if(s&&s.x.media){s.x.media.muted=false;
 function gap(){const st=matchMedia('(display-mode: standalone)').matches||navigator.standalone,p=document.createElement('div');p.style.cssText='position:fixed;visibility:hidden;padding-bottom:env(safe-area-inset-bottom)';document.body.append(p);
  const inset=parseFloat(getComputedStyle(p).paddingBottom)||0;p.remove();const g=Math.round(screen.height-innerHeight);document.documentElement.style.setProperty('--sb',Math.max(0,inset-((st&&g>8&&g<=100)?g:0))+'px')}
 gap();setTimeout(gap,700);addEventListener('orientationchange',()=>setTimeout(gap,400));
-raf=requestAnimationFrame(tick);initLock();
+raf=requestAnimationFrame(tick);
 </script></body></html>
