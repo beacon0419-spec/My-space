@@ -17,7 +17,7 @@ html,body{height:100%;background:#07070b;color:#fff;font:15px -apple-system,syst
 button{font:inherit;color:inherit;background:none;border:0}
 [hidden]{display:none!important}
 .serif{font-family:Didot,"Bodoni 72",Georgia,"Songti SC",serif}
-#feed{position:fixed;inset:0 0 var(--bt) 0;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#feed{position:fixed;inset:calc(var(--sf) + 40px) 0 var(--bt) 0;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 section{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;background:#000;overflow:hidden}
 section>video,section>img{width:100%;height:100%;object-fit:contain;display:block}
 .dml{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -87,13 +87,15 @@ input::placeholder{color:#fff7}
 #cl button{color:#fff7;padding:0 4px}
 #cf{display:flex;gap:8px;padding:10px 14px}
 #toast{position:fixed;left:50%;top:calc(var(--sf) + 56px);transform:translateX(-50%);background:#26242fee;padding:9px 18px;border-radius:20px;z-index:60;font-size:14px;white-space:nowrap}
-.imm #top,.imm #rail,.imm #bar,.imm #pg,.imm #snd,.imm #toast,.imm #sheet{display:none!important}.imm #feed{bottom:0}
+.imm #top,.imm #rail,.imm #bar,.imm #pg,.imm #snd,.imm #toast,.imm #sheet{display:none!important}.imm #feed{top:0;bottom:0}
 html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail button:active,#sel button:active{opacity:.55}
 .dup{padding:6px 14px 30px}.dup .nil{padding:20px 8px;font-size:14px;color:#fffc}.dup .nil small{color:#fff8;line-height:1.9;display:inline-block;margin-top:6px}.dup h3{font-weight:500;font-size:15px;margin:18px 0 8px;color:var(--g);letter-spacing:2px}
 .dup .big{display:block;width:100%;height:48px;margin:6px 0 10px;border-radius:24px}.dup .gp{border:1px solid #ffffff14;border-radius:14px;padding:10px;margin-bottom:12px;background:#ffffff08}
 .dup .rw{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}.dup .it{flex:none;width:86px;aspect-ratio:3/4;border-radius:8px;background:#15141d center/cover;position:relative}
 .dup .it b{position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;background:#000a;text-align:center;line-height:24px;font-size:12px;font-weight:400}.dup .it i{position:absolute;left:5px;bottom:4px;font-size:11px;font-style:normal}
 .dup .ac{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;color:#fff9}.dup .ac button{color:var(--g);font-size:13px;padding:4px 0}
+#sub b{flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px;font-weight:500}#sub button{font-size:14px;padding:4px 6px}
+.fc .rn{color:#fff8;font-size:18px;padding:10px 12px;flex:none}.fc.drag{background:#ffffff14;border-radius:12px;box-shadow:0 8px 22px #000b}
 </style></head><body>
 <div id="feedv" hidden>
  <div id="feed"></div><div id="empty" hidden>还没有作品<br>去「我的」点“导入作品”开始</div>
@@ -109,7 +111,7 @@ html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail
  <div class="hdr"><div class="av" id="av"></div><h2 class="serif">日月草的后宫</h2><p class="serif">SUN MOON GRASS</p>
   <div class="st"><div><b id="n1">0</b><span>作品</span></div><div><b id="n2">0</b><span>收藏夹</span></div></div></div>
  <div class="tabs"><button id="t1" class="on">作品</button><button id="t2">收藏夹</button><button id="t3">查重</button><button id="bsel" class="sb">选择</button></div>
- <div id="sub" hidden><button id="sbk">‹ 返回</button><b id="sn"></b><button id="sdel">删除收藏夹</button></div>
+ <div id="sub" hidden><button id="sbk">‹ 返回</button><b id="sn"></b><button id="sren">重命名</button><button id="sdel">删除收藏夹</button></div>
  <div id="grid"></div>
 </div>
 <div id="top"><button id="bk" hidden>‹</button><span id="ttl" class="serif">日月草</span><div><button id="imm" class="tg">沉浸</button><button id="rnd" class="tg">随机</button><button id="aut" class="tg">连播</button><button id="add">＋</button><button id="cfg">⚙︎</button><button id="lk">🔒</button></div></div>
@@ -324,7 +326,7 @@ function drawMe(){$('#n1').textContent=P.length;$('#n2').textContent=FD.f.length
  const g=$('#grid'),inF=tab==='f'&&fold;$('#sub').hidden=!inF;$('#bsel').hidden=tab==='d'||(tab==='f'&&!fold);$('#bsel').textContent=sm?'完成':'选择';$('#me').classList.toggle('sm',sm);$('#sel').hidden=!sm;$('#imp').hidden=sm;g.innerHTML='';selUI();
  if(tab==='d'){drawDup(g);return}
  if(tab==='w'||inF){if(inF)$('#sn').textContent=FD.f.find(x=>x.id===fold).n;grid(g,curList())}
- else{g.className='fl';for(const f of FD.f){const c=document.createElement('div');c.className='fc';const fp=P.find(p=>p.id===f.ids[0]);c.innerHTML='<div class="cv"></div><div class="t"><b></b><small>'+f.ids.length+' 个作品</small></div>';if(fp&&fp.th)c.firstChild.style.backgroundImage=`url(${fp.th})`;else c.firstChild.textContent='☆';c.querySelector('b').textContent=f.n;c.onclick=()=>{fold=f.id;S.clear();drawMe()};g.append(c)}
+ else{g.className='fl';for(const f of FD.f){const c=document.createElement('div');c.className='fc';const fp=P.find(p=>p.id===f.ids[0]);c.innerHTML='<div class="cv"></div><div class="t"><b></b><small>'+f.ids.length+' 个作品</small></div>';if(fp&&fp.th)c.firstChild.style.backgroundImage=`url(${fp.th})`;else c.firstChild.textContent='☆';c.querySelector('b').textContent=f.n;c.dataset.fid=f.id;const rb=el('button','rn');rb.textContent='✎';rb.onclick=e=>{e.stopPropagation();renameF(f)};c.append(rb);c.onclick=()=>{if(skip)return;fold=f.id;S.clear();drawMe()};g.append(c)}
   const c=document.createElement('div');c.className='fc';c.innerHTML='<div class="cv">＋</div><div class="t"><b>新建收藏夹</b></div>';c.onclick=()=>sh('新建收藏夹',()=>{},'收藏夹名称',async t=>{FD.f.push({id:crypto.randomUUID(),n:t,ids:[]});await saveFD();closeSheet();drawMe()});g.prepend(c)}}
 function grid(g,list){g.className='gr';if(!list.length){g.className='';g.innerHTML='<div class="nil">这里还没有作品</div>';return}
  for(const p of list){const c=document.createElement('div');c.dataset.id=p.id;if(p.th)c.style.backgroundImage=`url(${p.th})`;c.innerHTML=(p.v?'<i>▶</i>':'')+'<u></u>';if(S.has(p.id))c.classList.add('on');
@@ -332,6 +334,17 @@ function grid(g,list){g.className='gr';if(!list.length){g.className='';g.innerHT
 function tog(c,f){const id=c.dataset.id,on=f===undefined?!S.has(id):f;on?S.add(id):S.delete(id);c.classList.toggle('on',on);selUI()}
 function selUI(){$('#sc').textContent=S.size}
 $('#t1').onclick=()=>{tab='w';fold=null;S.clear();drawMe()};$('#t2').onclick=()=>{tab='f';fold=null;sm=false;S.clear();drawMe()};$('#t3').onclick=()=>{tab='d';fold=null;sm=false;S.clear();drawMe()};
+function renameF(f){sh('重命名收藏夹',()=>{},'新名称',async t=>{f.n=t.slice(0,30);await saveFD();closeSheet();drawMe()});$('#ci').value=f.n;setTimeout(()=>{$('#ci').focus();$('#ci').select()},380)}
+$('#sren').onclick=()=>{const f=FD.f.find(x=>x.id===fold);if(f)renameF(f)};
+/* 长按收藏夹拖动排序（实时换位，靠近上下边缘自动滚动） */
+{const g=$('#grid'),me=$('#me');let lp,row=null,ly=0,lx=0,dg=false,al=0;
+ const rows=()=>[...g.querySelectorAll('.fc[data-fid]')];
+ const place=()=>{const t=document.elementFromPoint(lx,ly),r=t&&t.closest&&t.closest('.fc[data-fid]');if(!r||r===row)return;const b=r.getBoundingClientRect();if(ly<b.top+b.height/2)g.insertBefore(row,r);else g.insertBefore(row,r.nextSibling)};
+ const loop=()=>{if(!dg)return;if(ly<150)me.scrollTop-=14;else if(ly>innerHeight-190)me.scrollTop+=14;place();al=requestAnimationFrame(loop)};
+ g.addEventListener('touchstart',e=>{if(!(view==='me'&&tab==='f'&&!fold))return;const r=e.target.closest('.fc[data-fid]');if(!r||e.target.closest('.rn'))return;lx=e.touches[0].clientX;ly=e.touches[0].clientY;clearTimeout(lp);lp=setTimeout(()=>{dg=true;row=r;skip=true;r.classList.add('drag');navigator.vibrate&&navigator.vibrate(10);loop()},380)},{passive:true});
+ g.addEventListener('touchmove',e=>{const t=e.touches[0];if(dg){lx=t.clientX;ly=t.clientY;if(e.cancelable)e.preventDefault()}else if(Math.abs(t.clientY-ly)>10||Math.abs(t.clientX-lx)>10)clearTimeout(lp)},{passive:false});
+ const end=async()=>{clearTimeout(lp);if(!dg){return}dg=false;cancelAnimationFrame(al);row.classList.remove('drag');const ids=rows().map(r=>r.dataset.fid);row=null;FD.f.sort((a,b)=>ids.indexOf(a.id)-ids.indexOf(b.id));await saveFD();setTimeout(()=>skip=false,350)};
+ g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
 $('#sbk').onclick=()=>{fold=null;sm=false;S.clear();drawMe()};
 $('#sdel').onclick=async()=>{const f=FD.f.find(x=>x.id===fold);if(f&&confirm(`删除收藏夹“${f.n}”？里面的作品不会被删除。`)){FD.f=FD.f.filter(x=>x!==f);fold=null;await saveFD();drawMe()}};
 $('#bsel').onclick=()=>{sm=!sm;S.clear();drawMe()};$('#scan').onclick=$('#bsel').onclick;
@@ -371,7 +384,7 @@ function showFeed(list,startId,mine,order){FB=list;const L=order||(rnd?shuf(list
  feed.scrollTop=Math.max(0,L.findIndex(p=>p.id===startId))*feed.clientHeight;secs.forEach(s=>io.observe(s));upd()}
 function activate(i){if(i<0||i===cur)return;if(secs[cur])pause(secs[cur]);cur=i;secs.forEach((s,j)=>{if(j===i)load(s);else if(Math.abs(j-i)>1)unload(s)});const s=secs[i];load(s).then(()=>{if(cur===i){play(s);setTimeout(()=>{if(cur===i&&secs[i+1])load(secs[i+1])},1500)}});upd()}
 function load(s){const x=s.x;if(x.p)return x.p;const g=x.g;
- return x.p=(async()=>{const bl=await readBlob(x);if(!bl||!key||x.g!==g)return;x.url=URL.createObjectURL(bl);const el=x.v?(VP.pop()||mkV()):document.createElement('img');if(x.v){el.loop=!aut;el.muted=false;el.onended=()=>onEnd(s);el.onclick=e=>{const W=innerWidth,H=$('#feed').clientHeight;if(e.clientX<W*.06||e.clientX>W*.78||e.clientY<H*.16||e.clientY>H*.78)return;el.paused?el.play():el.pause()}}
+ return x.p=(async()=>{const bl=await readBlob(x);if(!bl||!key||x.g!==g)return;x.url=URL.createObjectURL(bl);const el=x.v?(VP.pop()||mkV()):document.createElement('img');if(x.v){el.loop=!aut;el.muted=false;el.onended=()=>onEnd(s);el.onclick=e=>{const W=innerWidth,fr=$('#feed').getBoundingClientRect(),H=fr.height,yy=e.clientY-fr.top;if(e.clientX<W*.06||e.clientX>W*.78||yy<H*.16||yy>H*.78)return;el.paused?el.play():el.pause()}}
   el.addEventListener(x.v?'loadeddata':'load',()=>lazyTh(s),{once:true});el.src=x.url;s.prepend(el);x.media=el;await notes(s);if(s===secs[cur])upd()})()}
 async function lazyTh(s,tries=0){const x=s.x,p=P.find(q=>q.id===x.pid),el=x.media;if(!p||(p.th&&!p.bad)||!el||!key)return;const w=el.videoWidth||el.naturalWidth,h=el.videoHeight||el.naturalHeight;if(!w)return;
  try{const W=360,H=480,c=document.createElement('canvas');c.width=W;c.height=H;const k=Math.max(W/w,H/h);c.getContext('2d').drawImage(el,(W-w*k)/2,(H-h*k)/2,w*k,h*k);
