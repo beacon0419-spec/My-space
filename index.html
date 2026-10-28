@@ -96,7 +96,7 @@ html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail
 .dup .ac{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;color:#fff9}.dup .ac button{color:var(--g);font-size:13px;padding:4px 0}
 #sub b{flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px;font-weight:500}#sub button{font-size:14px;padding:4px 6px}
 .fc .rn{color:#fff8;font-size:18px;padding:10px 12px;flex:none}.fc.drag{background:#ffffff14;border-radius:12px;box-shadow:0 8px 22px #000b}
-.alb{position:absolute;inset:0;touch-action:pan-y}.alb img{width:100%;height:100%;object-fit:contain;display:block}
+.alb{position:absolute;inset:0;touch-action:pan-y;overflow:hidden}.alb .trk{position:absolute;inset:0;will-change:transform}.alb .trk img{position:absolute;top:0;width:100%;height:100%;object-fit:contain;display:block}.alb .trk img:nth-child(1){left:-100%}.alb .trk img:nth-child(2){left:0}.alb .trk img:nth-child(3){left:100%}
 #al{position:fixed;left:0;right:0;bottom:calc(var(--bt) + 20px);height:30px;z-index:5;touch-action:none}
 #al .sg{position:absolute;left:14px;right:14px;bottom:8px;height:3px;display:flex;gap:2px;transition:height .15s}#al .sg i{flex:1;background:#ffffff40;border-radius:2px}#al .sg i.p{background:#fff}#al .sg i.a{background:var(--g);transform:scaleY(1.8)}#al.on .sg{height:7px}
 #alt{position:absolute;bottom:34px;left:0;right:0;text-align:center;font-size:22px;opacity:0;text-shadow:0 0 6px #000}#al.on #alt{opacity:1}
@@ -109,6 +109,7 @@ html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail
 .ec b{position:absolute;right:5px;top:5px;width:26px;height:26px;border-radius:50%;background:#000a;text-align:center;line-height:26px;font-size:12px;font-weight:400}
 .ec.drag{opacity:.75;transform:scale(1.06);z-index:2;box-shadow:0 8px 22px #000b}
 .ef{padding:10px 14px calc(10px + var(--sb))}#ea{width:100%;height:46px;border-radius:23px;border:1px solid var(--g);color:var(--g)}
+#wf{display:flex;gap:8px;padding:10px 14px 4px}#wf button{padding:6px 15px;border-radius:16px;background:#ffffff14;font-size:13px;color:#fffb}#wf button.on{background:var(--g);color:#1a1206;font-weight:600}
 </style></head><body>
 <div id="feedv" hidden>
  <div id="feed"></div><div id="empty" hidden>还没有作品<br>去「我的」点“导入作品”开始</div>
@@ -124,7 +125,7 @@ html,button,input{touch-action:manipulation}.tab:active,#top button:active,#rail
  <div class="hdr"><div class="av" id="av"></div><h2 class="serif">日月草的后宫</h2><p class="serif">SUN MOON GRASS</p>
   <div class="st"><div><b id="n1">0</b><span>作品</span></div><div><b id="n2">0</b><span>收藏夹</span></div></div></div>
  <div class="tabs"><button id="t1" class="on">作品</button><button id="t2">收藏夹</button><button id="t3">查重</button><button id="bsel" class="sb">选择</button></div>
- <div id="sub" hidden><button id="sbk">‹ 返回</button><b id="sn"></b><button id="sren">重命名</button><button id="sdel">删除收藏夹</button></div>
+ <div id="wf"><button data-f="all">全部</button><button data-f="al">图集</button><button data-f="vd">视频</button></div><div id="sub" hidden><button id="sbk">‹ 返回</button><b id="sn"></b><button id="sren">重命名</button><button id="sdel">删除收藏夹</button></div>
  <div id="grid"></div>
 </div>
 <div id="top"><button id="bk" hidden>‹</button><span id="ttl" class="serif">日月草</span><div><button id="imm" class="tg">沉浸</button><button id="rnd" class="tg">随机</button><button id="aut" class="tg">连播</button><button id="add">＋</button><button id="cfg">⚙︎</button><button id="lk">🔒</button></div></div>
@@ -182,12 +183,12 @@ $('#lf').onsubmit=async e=>{e.preventDefault();const pw=$('#pw').value;if(!pw)re
 $('#mx').onclick=()=>{$('#mig').hidden=true;$('#pw').value='';msg('')};
 async function enter(st){$('#lock').hidden=true;$('#mig').hidden=true;msg('');await loadAll();
  if(st){try{restore(st)}catch(e){showFeed(P,null,false)}}else showFeed(P,null,false);scanDark()}
-function restore(st){rnd=!!st.rnd;aut=!!st.aut;dmOn=st.dmOn!==false;tgSync();tab=st.tab||'w';fold=FD.f.some(f=>f.id===st.fold)?st.fold:null;if(tab==='f'&&!fold&&st.fold)tab='f';
+function restore(st){rnd=!!st.rnd;aut=!!st.aut;dmOn=st.dmOn!==false;tgSync();tab=st.tab||'w';wf=st.wf||'all';fold=FD.f.some(f=>f.id===st.fold)?st.fold:null;if(tab==='f'&&!fold&&st.fold)tab='f';
  const by=id=>P.find(p=>p.id===id);
  if(st.view==='feed'){const L=(st.fl||[]).map(by).filter(Boolean),base=st.fb==='home'?P:(st.fb||[]).map(by).filter(Boolean);
   if(!L.length)return showFeed(P,null,false);pend=st.cur?{id:st.cur,t:st.vt||0,a:st.ai||0}:null;showFeed(base.length?base:L,st.cur,st.fromMe,L);if(st.imm)setTimeout(()=>{if(view==='feed')setImm(true)},400)}
  else{lastMeY=st.meY||0;go('me')}}
-function saveState(){if(!key||!view)return;try{const s=secs[cur],st={ts:Date.now(),view,fromMe,tab,fold,imm,dmOn,rnd,aut,meY:view==='me'?$('#me').scrollTop:lastMeY};
+function saveState(){if(!key||!view)return;try{const s=secs[cur],st={ts:Date.now(),view,fromMe,tab,wf,fold,imm,dmOn,rnd,aut,meY:view==='me'?$('#me').scrollTop:lastMeY};
  if(view==='feed'){st.fl=secs.map(z=>z.x.pid);st.fb=FB===P?'home':FB.map(p=>p.id);st.cur=s?s.x.pid:null;st.vt=s&&s.x.v&&s.x.media?s.x.media.currentTime:0;st.ai=s&&s.x.al?s.x.al.idx:0}
  localStorage.st=JSON.stringify(st)}catch(e){}}
 const clearState=()=>{try{localStorage.removeItem('st')}catch(e){}};
@@ -197,7 +198,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){hidAt=Date
 addEventListener('pagehide',saveState);
 function toGate(){imm&&setImm(false);closeSheet();$('#ed').hidden=true;secs.forEach(unload);io.disconnect();$('#feed').innerHTML='';secs=[];cur=-1;S.clear();sm=false;DUP=null;$('#feedv').hidden=$('#me').hidden=true;view='';clearState();$('#lock').hidden=false}
 $('#lk').onclick=toGate;
-$('#cfg').onclick=()=>sh('设置',l=>{const q=el('p'),nb=P.filter(z=>(!z.th||z.bad)&&!z.al).length;q.innerHTML='<span>修复缩略图<small>重新生成黑色或缺失的封面</small></span><em>'+(nb?nb+' 个待修复 ›':'全部正常')+'</em>';q.onclick=()=>{closeSheet();regen()};l.append(q)});
+$('#cfg').onclick=()=>sh('设置',l=>{const q=el('p'),nb=P.filter(z=>(!z.th||z.bad)&&!z.al).length;q.innerHTML='<span>修复缩略图<small>重新生成黑色或缺失的封面</small></span><em>'+(nb?nb+' 个待修复 ›':'全部正常')+'</em>';q.onclick=()=>{closeSheet();regen()};const hp=el('p');hp.innerHTML='<span>触感反馈<small>点按、拖动选择、换位时轻微震动（iOS 17.4 及以上）</small></span><em>'+(HAPON?'已开启':'已关闭')+'</em>';hp.onclick=()=>{HAPON=!HAPON;try{localStorage.hap=HAPON?1:0}catch(e){}closeSheet();hap()};l.append(q,hp)});
 function gateSVG(){let ry='',sp='';
  for(let i=0;i<24;i++){const a=i*Math.PI/12,L=i%2?122:142,w=.075,p=(r,d)=>(150+r*Math.cos(a+d)).toFixed(1)+','+(236+r*Math.sin(a+d)).toFixed(1);ry+=`<path d="M${p(106,-w)}L${p(L,0)}L${p(106,w)}Z"/>`}
  [[44,120,2.2],[340,96,1.8],[60,520,1.6],[330,470,2.4],[300,650,1.6],[84,664,1.8]].forEach(([x,y,r])=>sp+=`<circle cx="${x}" cy="${y}" r="${r}"/>`);
@@ -229,6 +230,10 @@ $('#lock').insertAdjacentHTML('afterbegin',gateSVG());$('#hit').addEventListener
 /* ---------- 工具 ---------- */
 function toast(t,ms=1800){let e=$('#toast');if(!e){e=document.createElement('div');e.id='toast';document.body.append(e)}e.textContent=t;clearTimeout(tt);if(ms)tt=setTimeout(()=>e.remove(),ms)}
 const clock=s=>{const x=s.x;return x.v&&x.media?x.media.currentTime:((performance.now()-x.t0)/1000)%20};
+var HAPON=true,_hl=0;try{HAPON=localStorage.hap!=='0'}catch(e){}
+const hapEl=(()=>{const l=document.createElement('label');l.style.cssText='position:fixed;left:-99px;top:0;width:1px;height:1px;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');l.append(i);document.body.append(l);return l})();
+function hap(){if(!HAPON)return;const n=Date.now();if(n-_hl<45)return;_hl=n;try{if(navigator.vibrate)navigator.vibrate(8);else hapEl.click()}catch(e){}}
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('button,#cl p,.fc,.it,.gr div');if(t&&!(t.matches('.gr div')&&sm))hap()},true);
 const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00';
 function sh(t,fn,ph,sub){rf=fn;$('#sct').textContent=t;redo();onSub=sub||null;$('#cf').hidden=!sub;if(sub)$('#ci').placeholder=ph;$('#sheet').classList.add('on')}
 function redo(){const l=$('#cl');l.innerHTML='';rf(l)}
@@ -305,25 +310,38 @@ async function saveAlbum(p,imgs){const r=await tx('posts','readonly',st=>st.get(
 async function alLoad(s,i){const A=s.x.al,im=A.imgs[i];if(!im)return null;if(A.c[i])return A.c[i];if(A.l[i])return A.l[i];const g=s.x.g;
  return A.l[i]=(async()=>{try{const bl=await readBlob({pid:im.i,nc:im.nc,mime:im.t});if(!bl||s.x.g!==g)return null;const u=URL.createObjectURL(bl);A.c[i]=u;return u}finally{delete A.l[i]}})()}
 async function alThumb(s,i){const A=s.x.al,im=A.imgs[i];if(!im)return null;if(A.t[i])return A.t[i];const g=s.x.g,b=await tx('blobs','readonly',st=>st.get(im.i+'~t'));if(!b||s.x.g!==g)return null;return A.t[i]=URL.createObjectURL(new Blob([await open(b.iv,b.data)],{type:'image/jpeg'}))}
-async function alGo(s,i,fast){const x=s.x,A=x.al;if(!A||!x.media)return;i=Math.max(0,Math.min(A.imgs.length-1,i));A.idx=i;alBar(s);const img=x.media.querySelector('img');
- if(fast){const u=await alThumb(s,i);if(A.idx===i&&u&&x.media)img.src=u;return}
- const u=await alLoad(s,i);if(A.idx!==i||!x.media)return;if(u)img.src=u;
- clearTimeout(A.pt);A.pt=setTimeout(()=>{if(!x.media)return;for(const j of [i+1,i-1,i+2])alLoad(s,j);for(const k of Object.keys(A.c))if(Math.abs(k-i)>3){URL.revokeObjectURL(A.c[k]);delete A.c[k]}},150)}
+function alPanes(s){const x=s.x,A=x.al;if(!A||!x.media)return;const ps=x.media.firstChild.children;
+ [A.idx-1,A.idx,A.idx+1].forEach((j,k)=>{const im=ps[k],u=j>=0&&j<A.imgs.length?(A.c[j]||A.t[j]):null;if(u){if(im.dataset.u!==u){im.src=u;im.dataset.u=u}}else if(im.dataset.u){im.removeAttribute('src');delete im.dataset.u}})}
+function alPrefetch(s){const x=s.x,A=x.al,i=A.idx;clearTimeout(A.pt);A.pt=setTimeout(()=>{if(!x.media||A.idx!==i)return;
+ for(const j of [i+1,i-1]){alThumb(s,j).then(()=>{if(A.idx===i)alPanes(s)});alLoad(s,j).then(()=>{if(A.idx===i)alPanes(s)})}alLoad(s,i+2);
+ for(const k of Object.keys(A.c))if(Math.abs(k-i)>3){URL.revokeObjectURL(A.c[k]);delete A.c[k]}},120)}
+function alSlide(s,dir){const x=s.x,A=x.al;if(!A||!x.media||A.busy)return false;const j=A.idx+dir;if(j<0||j>=A.imgs.length)return false;A.busy=true;alPanes(s);const trk=x.media.firstChild;
+ trk.style.transition='transform .28s cubic-bezier(.2,.8,.2,1)';trk.style.transform=`translateX(${-dir*100}%)`;
+ setTimeout(()=>{if(!x.media||x.media.firstChild!==trk){A.busy=false;return}trk.style.transition='none';if(dir>0)trk.append(trk.firstChild);else trk.prepend(trk.lastChild);trk.style.transform='translateX(0)';A.idx=j;A.busy=false;alBar(s);alPanes(s);alLoad(s,j).then(()=>{if(A.idx===j)alPanes(s)});alPrefetch(s)},290);return true}
+async function alGo(s,i,mode){const x=s.x,A=x.al;if(!A||!x.media)return;i=Math.max(0,Math.min(A.imgs.length-1,i));if(i===A.idx&&mode!=='force')return;
+ if(mode==='anim'&&Math.abs(i-A.idx)===1&&!A.busy){alSlide(s,i-A.idx);return}
+ if(A.busy&&mode!=='force')return;A.idx=i;alBar(s);alPanes(s);alThumb(s,i).then(()=>{if(A.idx===i)alPanes(s)});
+ if(mode==='fast')return;await alLoad(s,i);if(A.idx!==i||!x.media)return;alPanes(s);alPrefetch(s)}
 function alBar(s){const b=$('#al'),A=s&&s.x.al;if(!A||s!==secs[cur]){b.hidden=true;return}b.hidden=false;const sg=b.querySelector('.sg'),n=A.imgs.length;
  if(sg.childElementCount!==n||b.dataset.s!==s.x.pid){sg.innerHTML='<i></i>'.repeat(n);sg.style.gap=n>40?'1px':'2px';b.dataset.s=s.x.pid}
  const c=sg.children;for(let k=0;k<n;k++){const cl=k<A.idx?'p':k===A.idx?'a':'';if(c[k].className!==cl)c[k].className=cl}}
-async function alInit(s,g){const x=s.x,A=x.al,box=el('div','alb'),img=el('img');box.append(img);if(x.g!==g||!key)return;s.prepend(box);x.media=box;
+async function alInit(s,g){const x=s.x,A=x.al,box=el('div','alb'),trk=el('div','trk');for(let k=0;k<3;k++)trk.append(el('img'));box.append(trk);if(x.g!==g||!key)return;s.prepend(box);x.media=box;A.busy=false;
  if(pend&&pend.id===x.pid)A.idx=Math.min(pend.a||0,A.imgs.length-1);
- let st=null;box.addEventListener('touchstart',e=>{const t=e.touches[0];st={x:t.clientX,y:t.clientY,t:Date.now()}},{passive:true});
- box.addEventListener('touchend',e=>{if(!st)return;const t=e.changedTouches[0],dx=t.clientX-st.x,dy=t.clientY-st.y,q=st;st=null;
-  if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3)alGo(s,A.idx+(dx<0?1:-1));
-  else if(Math.abs(dx)<12&&Math.abs(dy)<12&&Date.now()-q.t<350){const W=innerWidth;if(t.clientX<W*.3)alGo(s,A.idx-1);else if(t.clientX>W*.7)alGo(s,A.idx+1)}});
- await alGo(s,A.idx)}
+ let st=null;const snap=()=>{trk.style.transition='transform .22s ease';trk.style.transform='translateX(0)'};
+ box.addEventListener('touchstart',e=>{if(A.busy){st=null;return}const t=e.touches[0];st={x:t.clientX,y:t.clientY,t:Date.now(),d:false};trk.style.transition='none'},{passive:true});
+ box.addEventListener('touchmove',e=>{if(!st)return;const t=e.touches[0];let dx=t.clientX-st.x;const dy=t.clientY-st.y;
+  if(!st.d){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.2){st.d=true;alPanes(s);const i=A.idx;for(const j of [i-1,i+1])alThumb(s,j).then(()=>{if(A.idx===i)alPanes(s)})}else return}
+  if((dx>0&&A.idx===0)||(dx<0&&A.idx===A.imgs.length-1))dx*=.3;trk.style.transform=`translateX(${dx}px)`},{passive:true});
+ box.addEventListener('touchend',e=>{if(!st)return;const q=st,t=e.changedTouches[0];st=null;
+  if(q.d){const dx=t.clientX-q.x,v=dx/Math.max(1,Date.now()-q.t);if((Math.abs(dx)>innerWidth*.22||Math.abs(v)>.5)&&alSlide(s,dx<0?1:-1))hap();else snap();return}
+  if(Math.abs(t.clientX-q.x)<12&&Math.abs(t.clientY-q.y)<12&&Date.now()-q.t<350){if(t.clientX<innerWidth*.3){if(alSlide(s,-1))hap()}else if(t.clientX>innerWidth*.7){if(alSlide(s,1))hap()}}});
+ box.addEventListener('touchcancel',()=>{if(st&&st.d)snap();st=null});
+ await alGo(s,A.idx,'force')}
 {const bar=$('#al');let lp,scr=false,x0=0;
- const at=cx=>{const s=secs[cur];if(!s||!s.x.al)return;const n=s.x.al.imgs.length,r=bar.querySelector('.sg').getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.floor((cx-r.left)/r.width*n)));if(i!==s.x.al.idx||!scr)alGo(s,i,true);$('#alt').textContent=(i+1)+' / '+n};
- bar.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;scr=false;clearTimeout(lp);lp=setTimeout(()=>{scr=true;bar.classList.add('on');navigator.vibrate&&navigator.vibrate(8);at(x0)},250)},{passive:true});
+ const at=cx=>{const s=secs[cur];if(!s||!s.x.al)return;const n=s.x.al.imgs.length,r=bar.querySelector('.sg').getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.floor((cx-r.left)/r.width*n)));if(i!==s.x.al.idx){hap();alGo(s,i,'fast')}$('#alt').textContent=(i+1)+' / '+n};
+ bar.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;scr=false;clearTimeout(lp);lp=setTimeout(()=>{scr=true;bar.classList.add('on');hap();at(x0)},250)},{passive:true});
  bar.addEventListener('touchmove',e=>{const cx=e.touches[0].clientX;if(scr){if(e.cancelable)e.preventDefault();at(cx)}else if(Math.abs(cx-x0)>10)clearTimeout(lp)},{passive:false});
- const end=()=>{clearTimeout(lp);if(!scr)return;scr=false;bar.classList.remove('on');const s=secs[cur];if(s&&s.x.al)alGo(s,s.x.al.idx)};bar.addEventListener('touchend',end);bar.addEventListener('touchcancel',end)}
+ const end=()=>{clearTimeout(lp);if(!scr)return;scr=false;bar.classList.remove('on');const s=secs[cur];if(s&&s.x.al)alGo(s,s.x.al.idx,'force')};bar.addEventListener('touchend',end);bar.addEventListener('touchcancel',end)}
 /* 图集编辑：拖动改顺序、删除、添加 */
 var EL=null,EP=null,EDEL=[],EADD=[],ETH={};
 const edThumb=async im=>{if(ETH[im.i])return ETH[im.i];const b=await tx('blobs','readonly',st=>st.get(im.i+'~t'));if(!b)return null;return ETH[im.i]=URL.createObjectURL(new Blob([await open(b.iv,b.data)],{type:'image/jpeg'}))};
@@ -335,7 +353,7 @@ function closeEd(){$('#ed').hidden=true;Object.values(ETH).forEach(u=>URL.revoke
 $('#be').onclick=openEd;
 $('#ec').onclick=async()=>{busy=true;for(const im of EADD)await delImgBlobs(im);busy=false;closeEd()};
 $('#eok').onclick=async()=>{busy=true;try{const s=secs.find(z=>z.x.pid===EP.id),old=s&&s.x.al.imgs[s.x.al.idx];await saveAlbum(EP,EL);for(const im of EDEL)await delImgBlobs(im);
-  if(s){const A=s.x.al;Object.values(A.c).forEach(u=>URL.revokeObjectURL(u));Object.values(A.t).forEach(u=>URL.revokeObjectURL(u));A.c={};A.l={};A.t={};A.imgs=EP.al;const ni=old?EL.findIndex(z=>z.i===old.i):0;A.idx=Math.max(0,ni);alGo(s,A.idx)}
+  if(s){const A=s.x.al;Object.values(A.c).forEach(u=>URL.revokeObjectURL(u));Object.values(A.t).forEach(u=>URL.revokeObjectURL(u));A.c={};A.l={};A.t={};A.imgs=EP.al;const ni=old?EL.findIndex(z=>z.i===old.i):0;A.idx=Math.max(0,ni);alGo(s,A.idx,'force')}
   toast('已保存')}catch(e){toast('保存失败',2500)}busy=false;closeEd()};
 $('#ea').onclick=()=>{picking=true;$('#fa').click()};
 $('#fa').oncancel=()=>picking=false;
@@ -343,10 +361,10 @@ $('#fa').onchange=async e=>{const fs=[...e.target.files].filter(isImg);e.target.
  for(const f of fs){if(EL.length>=1000){toast('已达 1000 张上限');break}toast(`加密导入 ${++n}/${fs.length}`,0);try{const im=await storeImg(f);EL.push(im);EADD.push(im)}catch(err){}}
  busy=false;toast('已添加',1200);drawEd()};
 {const g=$('#eg');let lp,row=null,lx=0,ly=0,dg=false,al=0;
- const place=()=>{const t=document.elementFromPoint(lx,ly),r=t&&t.closest&&t.closest('.ec');if(!r||r===row||!g.contains(r))return;const b=r.getBoundingClientRect();if(lx<b.left+b.width/2)g.insertBefore(row,r);else g.insertBefore(row,r.nextSibling)};
+ const place=()=>{const t=document.elementFromPoint(lx,ly),r=t&&t.closest&&t.closest('.ec');if(!r||r===row||!g.contains(r))return;const b=r.getBoundingClientRect();if(lx<b.left+b.width/2)g.insertBefore(row,r);else g.insertBefore(row,r.nextSibling);hap()};
  const loop=()=>{if(!dg)return;if(ly<140)g.scrollTop-=14;else if(ly>innerHeight-170)g.scrollTop+=14;place();al=requestAnimationFrame(loop)};
- g.addEventListener('touchstart',e=>{const r=e.target.closest('.ec');if(!r||e.target.closest('b'))return;lx=e.touches[0].clientX;ly=e.touches[0].clientY;clearTimeout(lp);lp=setTimeout(()=>{dg=true;row=r;r.classList.add('drag');navigator.vibrate&&navigator.vibrate(10);loop()},300)},{passive:true});
- g.addEventListener('touchmove',e=>{const t=e.touches[0];if(dg){lx=t.clientX;ly=t.clientY;if(e.cancelable)e.preventDefault()}else if(Math.abs(t.clientY-ly)>10||Math.abs(t.clientX-lx)>10)clearTimeout(lp)},{passive:false});
+ g.addEventListener('touchstart',e=>{const r=e.target.closest('.ec');if(!r||e.target.closest('b'))return;lx=e.touches[0].clientX;ly=e.touches[0].clientY;clearTimeout(lp);lp=setTimeout(()=>{dg=true;row=r;r.classList.add('drag');hap();loop()},300)},{passive:true});
+ g.addEventListener('touchmove',e=>{const t=e.touches[0];if(dg){lx=t.clientX;ly=t.clientY;if(e.cancelable)e.preventDefault();place()}else if(Math.abs(t.clientY-ly)>10||Math.abs(t.clientX-lx)>10)clearTimeout(lp)},{passive:false});
  const end=()=>{clearTimeout(lp);if(!dg)return;dg=false;cancelAnimationFrame(al);row.classList.remove('drag');row=null;const ids=[...g.children].map(c=>c.dataset.i);EL.sort((a,b)=>ids.indexOf(a.i)-ids.indexOf(b.i));[...g.children].forEach((c,k)=>c.querySelector('span').textContent=k+1)};
  g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
 
@@ -407,8 +425,9 @@ $('#tH').onclick=()=>{if(view==='feed'&&!fromMe&&secs.length)return;sm=false;sho
 $('#tM').onclick=()=>{lastMeY=0;go('me')};$('#bk').onclick=()=>go('me');
 
 /* ---------- 个人主页 ---------- */
-function curList(){if(tab==='w')return P;const f=FD.f.find(x=>x.id===fold);return f?f.ids.map(id=>P.find(p=>p.id===id)).filter(Boolean):[]}
-function drawMe(){$('#n1').textContent=P.length;$('#n2').textContent=FD.f.length;$('#t1').classList.toggle('on',tab==='w');$('#t2').classList.toggle('on',tab==='f');$('#t3').classList.toggle('on',tab==='d');
+var wf='all';const wfList=()=>wf==='al'?P.filter(p=>!p.v):wf==='vd'?P.filter(p=>p.v):P;
+function curList(){if(tab==='w')return wfList();const f=FD.f.find(x=>x.id===fold);return f?f.ids.map(id=>P.find(p=>p.id===id)).filter(Boolean):[]}
+function drawMe(){$('#n1').textContent=P.length;$('#wf').hidden=tab!=='w';{const cn={all:P.length,al:P.filter(p=>!p.v).length,vd:P.filter(p=>p.v).length},nm={all:'全部',al:'图集',vd:'视频'};document.querySelectorAll('#wf button').forEach(b=>{b.textContent=nm[b.dataset.f]+' '+cn[b.dataset.f];b.classList.toggle('on',b.dataset.f===wf)})}$('#n2').textContent=FD.f.length;$('#t1').classList.toggle('on',tab==='w');$('#t2').classList.toggle('on',tab==='f');$('#t3').classList.toggle('on',tab==='d');
  const g=$('#grid'),inF=tab==='f'&&fold;$('#sub').hidden=!inF;$('#bsel').hidden=tab==='d'||(tab==='f'&&!fold);$('#bsel').textContent=sm?'完成':'选择';$('#me').classList.toggle('sm',sm);$('#sel').hidden=!sm;$('#imp').hidden=sm;g.innerHTML='';selUI();
  if(tab==='d'){drawDup(g);return}
  if(tab==='w'||inF){if(inF)$('#sn').textContent=FD.f.find(x=>x.id===fold).n;grid(g,curList())}
@@ -417,18 +436,18 @@ function drawMe(){$('#n1').textContent=P.length;$('#n2').textContent=FD.f.length
 function grid(g,list){g.className='gr';if(!list.length){g.className='';g.innerHTML='<div class="nil">这里还没有作品</div>';return}
  for(const p of list){const c=document.createElement('div');c.dataset.id=p.id;if(p.th)c.style.backgroundImage=`url(${p.th})`;c.innerHTML=(p.v?'<i>▶</i>':p.al?'<i>▦ '+p.al.length+'</i>':'')+'<u></u>';if(S.has(p.id))c.classList.add('on');
   c.onclick=()=>{if(skip)return;sm?tog(c):showFeed(list,p.id,true)};g.append(c)}}
-function tog(c,f){const id=c.dataset.id,on=f===undefined?!S.has(id):f;on?S.add(id):S.delete(id);c.classList.toggle('on',on);selUI()}
+function tog(c,f){const id=c.dataset.id,on=f===undefined?!S.has(id):f;if(S.has(id)!==on)hap();on?S.add(id):S.delete(id);c.classList.toggle('on',on);selUI()}
 function selUI(){$('#sc').textContent=S.size}
-$('#t1').onclick=()=>{tab='w';fold=null;S.clear();drawMe()};$('#t2').onclick=()=>{tab='f';fold=null;sm=false;S.clear();drawMe()};$('#t3').onclick=()=>{tab='d';fold=null;sm=false;S.clear();drawMe()};
+$('#t1').onclick=()=>{tab='w';fold=null;S.clear();drawMe()};$('#t2').onclick=()=>{tab='f';fold=null;sm=false;S.clear();drawMe()};$('#t3').onclick=()=>{tab='d';fold=null;sm=false;S.clear();drawMe()};$('#wf').onclick=e=>{const b=e.target.closest('button');if(!b)return;wf=b.dataset.f;S.clear();drawMe()};
 function renameF(f){sh('重命名收藏夹',()=>{},'新名称',async t=>{f.n=t.slice(0,30);await saveFD();closeSheet();drawMe()});$('#ci').value=f.n;setTimeout(()=>{$('#ci').focus();$('#ci').select()},380)}
 $('#sren').onclick=()=>{const f=FD.f.find(x=>x.id===fold);if(f)renameF(f)};
 /* 长按收藏夹拖动排序（实时换位，靠近上下边缘自动滚动） */
 {const g=$('#grid'),me=$('#me');let lp,row=null,ly=0,lx=0,dg=false,al=0;
  const rows=()=>[...g.querySelectorAll('.fc[data-fid]')];
- const place=()=>{const t=document.elementFromPoint(lx,ly),r=t&&t.closest&&t.closest('.fc[data-fid]');if(!r||r===row)return;const b=r.getBoundingClientRect();if(ly<b.top+b.height/2)g.insertBefore(row,r);else g.insertBefore(row,r.nextSibling)};
+ const place=()=>{const t=document.elementFromPoint(lx,ly),r=t&&t.closest&&t.closest('.fc[data-fid]');if(!r||r===row)return;const b=r.getBoundingClientRect();if(ly<b.top+b.height/2)g.insertBefore(row,r);else g.insertBefore(row,r.nextSibling);hap()};
  const loop=()=>{if(!dg)return;if(ly<150)me.scrollTop-=14;else if(ly>innerHeight-190)me.scrollTop+=14;place();al=requestAnimationFrame(loop)};
- g.addEventListener('touchstart',e=>{if(!(view==='me'&&tab==='f'&&!fold))return;const r=e.target.closest('.fc[data-fid]');if(!r||e.target.closest('.rn'))return;lx=e.touches[0].clientX;ly=e.touches[0].clientY;clearTimeout(lp);lp=setTimeout(()=>{dg=true;row=r;skip=true;r.classList.add('drag');navigator.vibrate&&navigator.vibrate(10);loop()},380)},{passive:true});
- g.addEventListener('touchmove',e=>{const t=e.touches[0];if(dg){lx=t.clientX;ly=t.clientY;if(e.cancelable)e.preventDefault()}else if(Math.abs(t.clientY-ly)>10||Math.abs(t.clientX-lx)>10)clearTimeout(lp)},{passive:false});
+ g.addEventListener('touchstart',e=>{if(!(view==='me'&&tab==='f'&&!fold))return;const r=e.target.closest('.fc[data-fid]');if(!r||e.target.closest('.rn'))return;lx=e.touches[0].clientX;ly=e.touches[0].clientY;clearTimeout(lp);lp=setTimeout(()=>{dg=true;row=r;skip=true;r.classList.add('drag');hap();loop()},380)},{passive:true});
+ g.addEventListener('touchmove',e=>{const t=e.touches[0];if(dg){lx=t.clientX;ly=t.clientY;if(e.cancelable)e.preventDefault();place()}else if(Math.abs(t.clientY-ly)>10||Math.abs(t.clientX-lx)>10)clearTimeout(lp)},{passive:false});
  const end=async()=>{clearTimeout(lp);if(!dg){return}dg=false;cancelAnimationFrame(al);row.classList.remove('drag');const ids=rows().map(r=>r.dataset.fid);row=null;FD.f.sort((a,b)=>ids.indexOf(a.id)-ids.indexOf(b.id));await saveFD();setTimeout(()=>skip=false,350)};
  g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
 $('#sbk').onclick=()=>{fold=null;sm=false;S.clear();drawMe()};
@@ -443,9 +462,9 @@ $('#sall').onclick=()=>{const l=curList();if(S.size===l.length)S.clear();else l.
   if(md==='r'){const r=Math.floor(idx(c)/3);if(lr<0)lr=r;for(let k=Math.min(lr,r);k<=Math.max(lr,r);k++)rowSel(k);lr=r}else if(md==='c')tog(c,m0)};
  const loop=()=>{if(!drag)return;if(ly<150)me.scrollTop-=16;else if(ly>innerHeight-190)me.scrollTop+=16;
   under();al=requestAnimationFrame(loop)};
- const begin=h=>{if(drag)return;drag=true;skip=true;clearTimeout(lp);md=h?'c':'r';lr=-1;if(sc){m0=!S.has(sc.dataset.id);if(h)tog(sc,m0)}navigator.vibrate&&navigator.vibrate(8);cancelAnimationFrame(al);loop()};
+ const begin=h=>{if(drag)return;drag=true;skip=true;clearTimeout(lp);md=h?'c':'r';lr=-1;if(sc){m0=!S.has(sc.dataset.id);if(h)tog(sc,m0)}hap();cancelAnimationFrame(al);loop()};
  g.addEventListener('touchstart',e=>{if(!sm)return;const t=e.touches[0];sx=lx=t.clientX;sy=ly=t.clientY;sc=e.target.closest('[data-id]');clearTimeout(lp);lp=setTimeout(()=>begin(false),200)},{passive:true});
- g.addEventListener('touchmove',e=>{if(!sm)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;if(!drag){const dx=Math.abs(lx-sx),dy=Math.abs(ly-sy);if(dx>10&&dx>dy)begin(true);else if(dy>10)clearTimeout(lp)}if(drag&&e.cancelable)e.preventDefault()},{passive:false});
+ g.addEventListener('touchmove',e=>{if(!sm)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;if(!drag){const dx=Math.abs(lx-sx),dy=Math.abs(ly-sy);if(dx>10&&dx>dy)begin(true);else if(dy>10)clearTimeout(lp)}if(drag){if(e.cancelable)e.preventDefault();under()}},{passive:false});
  const end=()=>{clearTimeout(lp);if(drag&&!md&&sc)tog(sc,m0);drag=false;md='';lr=-1;cancelAnimationFrame(al);setTimeout(()=>skip=false,350)};g.addEventListener('touchend',end);g.addEventListener('touchcancel',end)}
 var drag=false;
 function favSheet(ids,done){sh('收藏到…',l=>{const t=document.createElement('p');t.className='tip';t.textContent='选择要放进的收藏夹，也可以在下方新建一个。';l.append(t);
@@ -477,9 +496,9 @@ async function lazyTh(s,tries=0){const x=s.x,p=P.find(q=>q.id===x.pid),el=x.medi
  if(dark(c)&&tries<3){setTimeout(()=>lazyTh(s,tries+1),1500);return}
  const ab=await new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(ok),'image/jpeg',.72)),t=await seal(ab),r=await tx('posts','readonly',st=>st.get(x.pid));if(!r)return;
  r.ti=t.iv;r.td=t.data;await tx('posts','readwrite',st=>st.put(r));p.th&&URL.revokeObjectURL(p.th);p.th=URL.createObjectURL(new Blob([ab],{type:'image/jpeg'}));p.bad=false}catch(e){}}
-function unload(s){const x=s.x;x.g++;x.p=null;if(x.al){for(const u of Object.values(x.al.c))URL.revokeObjectURL(u);for(const u of Object.values(x.al.t))URL.revokeObjectURL(u);x.al.c={};x.al.l={};x.al.t={}}if(x.media){const m=x.media;if(x.v)m.pause();m.removeAttribute('src');if(x.v){m.load();m.onclick=null;m.onended=null;VP.push(m)}m.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
-function play(s){const x=s.x;if(!x.media)return;const t0=(pend&&pend.id===x.pid)?pend.t:0;if(pend&&pend.id===x.pid)pend=null;if(x.al){x.al.a0=x.al.idx;x.al.ak=-1}x.t0=performance.now();x.last=t0>0?t0:-1;x.i=0;x.dirty=false;x.adv=false;if(x.v)x.media.loop=!aut;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=t0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
-function pause(s){const x=s.x;if(x.v&&x.media)x.media.pause();s.querySelector('.dml').innerHTML=''}
+function unload(s){const x=s.x;x.on=false;x.g++;x.p=null;if(x.al){for(const u of Object.values(x.al.c))URL.revokeObjectURL(u);for(const u of Object.values(x.al.t))URL.revokeObjectURL(u);x.al.c={};x.al.l={};x.al.t={}}if(x.media){const m=x.media;if(x.v)m.pause();m.removeAttribute('src');if(x.v){m.load();m.onclick=null;m.onended=null;VP.push(m)}m.remove();x.media=null}if(x.url){URL.revokeObjectURL(x.url);x.url=null}}
+function play(s){const x=s.x;if(!x.media)return;const t0=(pend&&pend.id===x.pid)?pend.t:0;if(pend&&pend.id===x.pid)pend=null;if(x.al){x.al.a0=x.al.idx;x.al.ak=-1}x.on=true;x.t0=performance.now();x.last=t0>0?t0:-1;x.i=0;x.dirty=false;x.adv=false;if(x.v)x.media.loop=!aut;s.querySelector('.dml').innerHTML='';if(x.v){x.media.muted=false;x.media.currentTime=t0;x.media.play().catch(()=>{x.media.muted=true;x.media.play().catch(()=>{})})}}
+function pause(s){const x=s.x;x.on=false;if(x.v&&x.media)x.media.pause();s.querySelector('.dml').innerHTML=''}
 const isFav=id=>FD.f.some(f=>f.ids.includes(id));
 function upd(){const s=secs[cur];$('#cc').textContent=s?s.x.cm.length:0;$('#bd').classList.toggle('off',!dmOn);const f=s&&isFav(s.x.pid);$('#fv').classList.toggle('on',!!f);$('#fv i').textContent=f?'★':'☆';$('#be').hidden=!(s&&s.x.al);alBar(s)}
 
@@ -491,7 +510,7 @@ const pgE=$('#pg'),sndE=$('#snd');let _ph,_sh,_pp=-1;
 function tick(){raf=requestAnimationFrame(tick);const s=secs[cur],m=s&&s.x.media,vv=!!(m&&s.x.v);
  if(_ph!==!vv){_ph=!vv;pgE.hidden=!vv}const sh=!(vv&&m.muted);if(_sh!==sh){_sh=sh;sndE.hidden=sh}
  if(!s||!m)return;const x=s.x,c=clock(s);if(x.v)x.pl=!m.paused;
- if(aut&&!x.dirty&&!x.adv){if(x.al){const n=x.al.imgs.length,tg=x.al.a0+Math.floor((performance.now()-x.t0)/3500);if(tg!==x.al.ak){x.al.ak=tg;if(tg<n)alGo(s,tg);else{x.adv=true;next()}}}else if(!x.v&&performance.now()-x.t0>6000){x.adv=true;next()}}
+ if(aut&&x.on&&!x.dirty&&!x.adv){if(x.al){const n=x.al.imgs.length,tg=x.al.a0+Math.floor((performance.now()-x.t0)/3500);if(tg!==x.al.ak){x.al.ak=tg;if(tg<n)alGo(s,tg,'anim');else{x.adv=true;next()}}}else if(!x.v&&performance.now()-x.t0>6000){x.adv=true;next()}}
  if(c<x.last){x.last=-1;x.i=0}
  if(!pgD){let i=x.i||0;while(i<x.dm.length&&x.dm[i].t<=c){if(x.dm[i].t>x.last)spawn(s,x.dm[i]);i++}x.i=i}
  x.last=c;const du=x.v&&m.duration,p=du?Math.round(c/du*1000)/10:0;if(p!==_pp){_pp=p;pgE.style.setProperty('--p',p+'%')}}
